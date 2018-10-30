@@ -3,7 +3,7 @@
 static double const MS_PER_UPDATE = 10.0;
 
 Game::Game()
-	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default)
+	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(60, 20)
 {
 	m_window.setFramerateLimit(60);
 	if (!m_font.loadFromFile("./times.ttf"))
@@ -63,6 +63,7 @@ void Game::render()
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	sf::Text name = sf::Text("Square Wars", m_font, 30);
 	name.setPosition(100, 100);
+	m_map.render(m_window);
 	m_window.draw(name);
 	m_window.display();
 }

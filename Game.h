@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include "Map.h"
 
 class Game
 {
@@ -17,4 +18,5 @@ protected:
 	double windowHeight = 768;
 	sf::RenderWindow m_window;
 	sf::Font m_font;
+	Map m_map;
 };
