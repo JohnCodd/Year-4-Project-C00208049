@@ -6,9 +6,25 @@ class Tile
 public:
 	Tile() {};
 	~Tile() {};
+	virtual void setType(std::string type) {
+		this->type = type;
+	}
+	virtual std::string getType()
+	{
+		return this->type;
+	}
+	//virtual void setTexture(sf::RectangleShape* texture) {
+	//	this->m_texture = texture;
+	//};
+	//virtual sf::RectangleShape getTexture()
+	//{
+	//	return *this->m_texture;
+	//}
+
 protected:
 	int moveCost;
 	float defense;
 	std::string type;
-	sf::Texture* m_texture;
+private:
+	//sf::RectangleShape* m_texture;
 };

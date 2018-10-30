@@ -12,4 +12,5 @@ private:
 	int sizeX;
 	int sizeY;
 	std::map<std::string, Tile> tiles;
+	sf::Texture tileset;
 };
