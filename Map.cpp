@@ -91,6 +91,7 @@ void Map::render(sf::RenderWindow & window)
 			if (unitType == "Tank")
 			{
 				unitTexture.setTextureRect(sf::IntRect(48, 2, 24, 24));
+				unitTexture.setFillColor(sf::Color(100, 100, 255));
 			}
 			else
 			{
