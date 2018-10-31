@@ -16,6 +16,9 @@
     <Filter Include="Header Files\Map Tiles">
       <UniqueIdentifier>{f68374f2-d53e-4951-8cbd-4252d9fb4e2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Units">
+      <UniqueIdentifier>{eec94141-dab0-47d3-b3a0-62e580add7dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -40,6 +43,12 @@
     </ClInclude>
     <ClInclude Include="Map.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Unit.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Tank.h">
+      <Filter>Header Files\Units</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

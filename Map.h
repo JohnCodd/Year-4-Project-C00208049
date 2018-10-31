@@ -1,5 +1,6 @@
 #pragma once
 #include "Plains.h"
+#include "Tank.h"
 #include <map>
 class Map
 {
@@ -12,5 +13,7 @@ private:
 	int sizeX;
 	int sizeY;
 	std::map<std::string, Tile> tiles;
+	std::map<std::string, Unit> units;
 	sf::Texture tileset;
+	sf::Texture spritesheet;
 };
