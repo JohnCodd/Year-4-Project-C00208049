@@ -25,6 +25,10 @@ public:
 	{
 		return this->highlighted;
 	}
+	virtual int getCost()
+	{
+		return this->moveCost;
+	}
 	//virtual void setTexture(sf::RectangleShape* texture) {
 	//	this->m_texture = texture;
 	//};

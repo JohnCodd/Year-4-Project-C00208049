@@ -18,6 +18,10 @@ public:
 	{
 		return this->type;
 	}
+	virtual int getMoves()
+	{
+		return this->movement;
+	}
 protected:
 	int health;
 	int power;
