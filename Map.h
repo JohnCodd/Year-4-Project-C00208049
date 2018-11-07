@@ -9,6 +9,7 @@ public:
 	Map(int sizeX, int sizeY);
 	~Map() {};
 	void render(sf::RenderWindow & window);
+	void leftclick(sf::Event e);
 private:
 	int sizeX;
 	int sizeY;

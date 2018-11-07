@@ -3,7 +3,7 @@
 static double const MS_PER_UPDATE = 10.0;
 
 Game::Game()
-	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(60, 20)
+	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(20, 10)
 {
 	m_window.setFramerateLimit(60);
 	if (!m_font.loadFromFile("./times.ttf"))
@@ -50,6 +50,13 @@ void Game::processEvents()
 		if (event.type == sf::Event::Closed)
 		{
 			m_window.close();
+		}
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == sf::Mouse::Left)
+			{
+				m_map.leftclick(event);
+			}
 		}
 	}
 }
