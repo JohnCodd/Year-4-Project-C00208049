@@ -1,7 +1,15 @@
 #pragma once
 #include "Plains.h"
+#include "Forest.h"
 #include "Tank.h"
 #include <map>
+struct VectorComparator
+{
+	bool operator() (sf::Vector2f lhs, sf::Vector2f rhs) const
+	{
+		return std::tie(lhs.x, rhs.y) < std::tie(rhs.x, lhs.y);
+	}
+};
 class Map
 {
 public:
@@ -11,14 +19,17 @@ public:
 	void render(sf::RenderWindow & window);
 	void leftclick(sf::Event e);
 	void rightclick(sf::Event e);
+	void fButton(sf::Vector2i v);
 	void expandtile(sf::Vector2f location, int moves);
+	void moveSearch(Tile& start, int moves);
 	void clearTiles();
 private:
 	int sizeX;
 	int sizeY;
-	std::map<std::string, Tile> tiles;
-	std::map<std::string, Unit> units;
-	std::string selectedUnit;
+	std::map<sf::Vector2f, Tile, VectorComparator> tiles;
+	std::map<sf::Vector2f, Unit, VectorComparator> units;
+	Unit* selectedUnit;
 	sf::Texture tileset;
 	sf::Texture spritesheet;
+	sf::Texture highlightBorder;
 };

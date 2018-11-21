@@ -62,6 +62,13 @@ void Game::processEvents()
 				m_map.rightclick(event);
 			}
 		}
+		if (event.type == sf::Event::KeyPressed)
+		{
+			if (event.key.code == sf::Keyboard::F)
+			{
+				m_map.fButton(sf::Mouse::getPosition(m_window));
+			}
+		}
 	}
 }
 

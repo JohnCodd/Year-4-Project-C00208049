@@ -50,5 +50,8 @@
     <ClInclude Include="Tank.h">
       <Filter>Header Files\Units</Filter>
     </ClInclude>
+    <ClInclude Include="Forest.h">
+      <Filter>Header Files\Map Tiles</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

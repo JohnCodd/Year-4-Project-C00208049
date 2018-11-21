@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <list>
+#include "Unit.h"
 class Tile
 {
 public:
@@ -10,16 +12,9 @@ public:
 	{
 		return this->type;
 	}
-	virtual void highlight()
+	virtual void setHighlight(bool b)
 	{
-		if (highlighted == true)
-		{
-			highlighted = false;
-		}
-		else
-		{
-			highlighted = true;
-		}
+		highlighted = b;
 	}
 	virtual bool getHighlighted()
 	{
@@ -29,13 +24,41 @@ public:
 	{
 		return this->moveCost;
 	}
-	//virtual void setTexture(sf::RectangleShape* texture) {
-	//	this->m_texture = texture;
-	//};
-	//virtual sf::RectangleShape getTexture()
-	//{
-	//	return *this->m_texture;
-	//}
+	virtual void setUnit(Unit* u)
+	{
+		m_unit = u;
+	}
+
+	virtual void addEdge(Tile& tile)
+	{
+		adj.push_back(&tile);
+	}
+
+	virtual Unit* getUnit()
+	{
+		return m_unit;
+	}
+
+	virtual void setVisited(bool b)
+	{
+		visited = b;
+	}
+
+	virtual bool getVisited()
+	{
+		return visited;
+	}
+	
+	virtual void setSCost(int sc)
+	{
+		searchCost = sc;
+	}
+	virtual int getSCost()
+	{
+		return searchCost;
+	}
+
+	std::list<Tile*>& getAdj() { return adj; };
 
 protected:
 	int moveCost;
@@ -44,4 +67,9 @@ protected:
 	bool highlighted = false;
 private:
 	//sf::RectangleShape* m_texture;
+	bool visited;
+	int searchCost;
+	Unit* m_unit = nullptr;
+	std::list<Tile*> adj;
+	Tile* m_previous;
 };
