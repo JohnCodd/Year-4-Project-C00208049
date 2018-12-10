@@ -12,13 +12,14 @@ public:
 		type = "Tank";
 		gridLocation = sf::Vector2f(1, 1);
 	};
-	Tank(sf::Vector2f location)
+	Tank(sf::Vector2f location, int p)
 	{
 		health = 100;
 		power = 50;
 		movement = 6;
 		type = "Tank";
 		gridLocation = location;
+		player = p;
 	};
 	~Tank() {};
 };

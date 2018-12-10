@@ -34,12 +34,12 @@ c:\users\c00208049\documents\4th year project\square wars\map.cpp(72): warning C
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\map.cpp(146): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(159): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\map.cpp(273): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(298): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float

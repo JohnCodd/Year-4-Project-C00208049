@@ -57,6 +57,14 @@ public:
 	{
 		return searchCost;
 	}
+	virtual Tile* getPrevious()
+	{
+		return m_previous;
+	}
+	virtual void setPrevious(Tile &t)
+	{
+		m_previous = &t;
+	}
 
 	std::list<Tile*>& getAdj() { return adj; };
 

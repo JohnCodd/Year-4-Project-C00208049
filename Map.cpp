@@ -75,7 +75,11 @@ Map::Map(int x, int y)
 		}
 	}
 	sf::Vector2f location = sf::Vector2f(10, 6);
-	tiles[location].setUnit(new Tank(location));
+	tiles[location].setUnit(new Tank(location, 1));
+	location = sf::Vector2f(6, 10);
+	tiles[location].setUnit(new Tank(location, 2));
+	location = sf::Vector2f(4, 10);
+	tiles[location].setUnit(new Tank(location, 1));
 }
 
 void Map::render(sf::RenderWindow & window)
@@ -112,16 +116,25 @@ void Map::render(sf::RenderWindow & window)
 			tileTexture.setOutlineThickness(0);
 		}
 		std::string unitType;
+		sf::RectangleShape unitTexture;
+		int player;
 		if (t.second.getUnit() != nullptr)
 		{
 			unitType = t.second.getUnit()->getType();
+			player = t.second.getUnit()->getOwner();
+			if (player == 1)
+			{
+				unitTexture.setFillColor(sf::Color(100, 100, 255));
+			}
+			else if (player == 2)
+			{
+				unitTexture.setFillColor(sf::Color(255, 100, 100));
+			}
 		}
-		sf::RectangleShape unitTexture;
 		unitTexture.setTexture(&spritesheet);
 		if (unitType == "Tank")
 		{
 			unitTexture.setTextureRect(sf::IntRect(48, 2, 24, 24));
-			unitTexture.setFillColor(sf::Color(100, 100, 255));
 		}
 		else
 		{
@@ -230,14 +243,11 @@ void Map::moveSearch(Tile& start, int moves)
 	}
 	start.setVisited(true);
 	start.setSCost(moves);
-	//start.setHighlight(true);
+	start.setHighlight(true);
 	queue.push_back(&start);
 
-	int cost = 1;
 	while (!queue.empty())
 	{
-		int originCost = queue.front()->getCost();
-
 		for (auto &e : queue.front()->getAdj())
 		{
 			int movesRemaining = queue.front()->getSCost() - e->getCost();
@@ -247,12 +257,27 @@ void Map::moveSearch(Tile& start, int moves)
 				{
 					e->setVisited(false);
 				}
-				if (e->getVisited() == false)
+				if (e->getUnit() != nullptr)
 				{
-					e->setSCost(movesRemaining);
-					e->setVisited(true);
-					e->setHighlight(true);
-					queue.push_back(e);
+					if (e->getVisited() == false && e->getUnit()->getOwner() == start.getUnit()->getOwner())
+					{
+						e->setSCost(movesRemaining);
+						e->setVisited(true);
+						e->setHighlight(true);
+						e->setPrevious(*queue.front());
+						queue.push_back(e);
+					}
+				}
+				else
+				{
+					if (e->getVisited() == false)
+					{
+						e->setSCost(movesRemaining);
+						e->setVisited(true);
+						e->setHighlight(true);
+						e->setPrevious(*queue.front());
+						queue.push_back(e);
+					}
 				}
 			}
 		}

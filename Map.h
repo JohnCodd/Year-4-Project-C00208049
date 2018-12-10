@@ -28,7 +28,7 @@ private:
 	int sizeY;
 	std::map<sf::Vector2f, Tile, VectorComparator> tiles;
 	std::map<sf::Vector2f, Unit, VectorComparator> units;
-	Unit* selectedUnit;
+	Unit* selectedUnit = nullptr;
 	sf::Texture tileset;
 	sf::Texture spritesheet;
 	sf::Texture highlightBorder;
