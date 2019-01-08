@@ -23,6 +23,8 @@ public:
 	void expandtile(sf::Vector2f location, int moves);
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();
+	bool checkRange(Tile& tile);
+	Tile* getClosest(Tile& tile);
 private:
 	int sizeX;
 	int sizeY;

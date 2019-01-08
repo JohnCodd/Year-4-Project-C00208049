@@ -160,10 +160,19 @@ void Map::leftclick(sf::Event e)
 	sf::Vector2f tileLocation = sf::Vector2f(mousePosition.x, mousePosition.y);
 	if (tiles[tileLocation].getUnit())
 	{
-		selectedUnit = tiles[tileLocation].getUnit();
-		moveSearch(tiles[tileLocation], tiles[tileLocation].getUnit()->getMoves());
-		//expandtile(sf::Vector2f(static_cast<int>((mousePosition.x) + 1), static_cast<int>((mousePosition.y) + 1)), units[tileLocation].getMoves());
-		std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
+		if (selectedUnit == nullptr)
+		{
+			selectedUnit = tiles[tileLocation].getUnit();
+			moveSearch(tiles[tileLocation], tiles[tileLocation].getUnit()->getMoves());
+			//expandtile(sf::Vector2f(static_cast<int>((mousePosition.x) + 1), static_cast<int>((mousePosition.y) + 1)), units[tileLocation].getMoves());
+			std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
+		}
+		else if (tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(tiles[tileLocation]))
+		{
+			tiles[tileLocation].setUnit(nullptr);
+			selectedUnit = nullptr;
+			clearTiles();
+		}
 	}
 	else if (tiles[tileLocation].getHighlighted() == true)
 	{
@@ -291,6 +300,18 @@ void Map::clearTiles()
 	{
 		tiles[a.first].setHighlight(false);
 	}
+}
+
+bool Map::checkRange(Tile & tile)
+{
+	for (auto& t : tile.getAdj())
+	{
+		if (t->getHighlighted())
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void Map::fButton(sf::Vector2i v)

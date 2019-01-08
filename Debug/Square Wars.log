@@ -1,4 +1,8 @@
-﻿  Map.cpp
+﻿  Game.cpp
+c:\users\c00208049\documents\4th year project\square wars\game.cpp(6): warning C4244: 'argument': conversion from 'double' to 'unsigned int', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\game.cpp(37): warning C4244: '-=': conversion from 'double' to 'sf::Int32', possible loss of data
+  Main.cpp
+  Map.cpp
 c:\users\c00208049\documents\4th year project\square wars\map.cpp(22): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
@@ -39,9 +43,10 @@ c:\users\c00208049\documents\4th year project\square wars\map.cpp(159): warning 
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\map.cpp(298): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(319): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
+  Generating Code...
   Square Wars.vcxproj -> C:\Users\c00208049\Documents\4th Year Project\Square Wars\Debug\Square Wars.exe
