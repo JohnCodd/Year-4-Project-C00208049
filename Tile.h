@@ -29,9 +29,9 @@ public:
 		m_unit = u;
 	}
 
-	virtual void addEdge(Tile& tile)
+	virtual void addEdge(sf::Vector2f v, Tile& tile)
 	{
-		adj.push_back(&tile);
+		adj.push_back({ v, &tile });
 	}
 
 	virtual Unit* getUnit()
@@ -66,7 +66,7 @@ public:
 		m_previous = &t;
 	}
 
-	std::list<Tile*>& getAdj() { return adj; };
+	std::list<std::pair<sf::Vector2f, Tile*>>& getAdj() { return adj; };
 
 protected:
 	int moveCost;
@@ -78,6 +78,6 @@ private:
 	bool visited;
 	int searchCost;
 	Unit* m_unit = nullptr;
-	std::list<Tile*> adj;
+	std::list<std::pair<sf::Vector2f, Tile*>> adj;
 	Tile* m_previous;
 };

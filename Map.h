@@ -24,12 +24,13 @@ public:
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();
 	bool checkRange(Tile& tile);
-	Tile* getClosest(Tile& tile);
+	Tile* getClosest(Tile& t);
 private:
 	int sizeX;
 	int sizeY;
 	std::map<sf::Vector2f, Tile, VectorComparator> tiles;
 	std::map<sf::Vector2f, Unit, VectorComparator> units;
+	sf::Vector2f targetLocation;
 	Unit* selectedUnit = nullptr;
 	sf::Texture tileset;
 	sf::Texture spritesheet;

@@ -55,22 +55,22 @@ Map::Map(int x, int y)
 			if (i > 0)
 			{
 				newLocation = sf::Vector2f(j, i - 1);
-				tiles[location].addEdge(tiles[newLocation]);
+				tiles[location].addEdge(newLocation, tiles[newLocation]);
 			}
 			if (j + 1 < 50)
 			{
 				newLocation = sf::Vector2f(j + 1, i);
-				tiles[location].addEdge(tiles[newLocation]);
+				tiles[location].addEdge(newLocation, tiles[newLocation]);
 			}
 			if (i + 1 < 50)
 			{
 				newLocation = sf::Vector2f(j, i + 1);
-				tiles[location].addEdge(tiles[newLocation]);
+				tiles[location].addEdge(newLocation, tiles[newLocation]);
 			}
 			if (j > 0)
 			{
 				newLocation = sf::Vector2f(j - 1, i);
-				tiles[location].addEdge(tiles[newLocation]);
+				tiles[location].addEdge(newLocation, tiles[newLocation]);
 			}
 		}
 	}
@@ -170,6 +170,19 @@ void Map::leftclick(sf::Event e)
 		else if (tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(tiles[tileLocation]))
 		{
 			tiles[tileLocation].setUnit(nullptr);
+			Tile* closest = getClosest(tiles[tileLocation]);
+			if (&tiles[selectedUnit->getLocation()] != closest)
+			{
+				Unit movingUnit = *selectedUnit;
+				//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
+				//{
+				//	//return p.second == *closest;
+				//});
+				
+				movingUnit.setLocation(targetLocation);
+				closest->setUnit(new Unit(movingUnit));
+				tiles[selectedUnit->getLocation()].setUnit(nullptr);
+			}
 			selectedUnit = nullptr;
 			clearTiles();
 		}
@@ -257,8 +270,9 @@ void Map::moveSearch(Tile& start, int moves)
 
 	while (!queue.empty())
 	{
-		for (auto &e : queue.front()->getAdj())
+		for (auto &pair : queue.front()->getAdj())
 		{
+			auto & e = pair.second;
 			int movesRemaining = queue.front()->getSCost() - e->getCost();
 			if (movesRemaining >= 0)
 			{
@@ -304,8 +318,9 @@ void Map::clearTiles()
 
 bool Map::checkRange(Tile & tile)
 {
-	for (auto& t : tile.getAdj())
+	for (auto& pair : tile.getAdj())
 	{
+		auto t = pair.second;
 		if (t->getHighlighted())
 		{
 			return true;
@@ -319,10 +334,37 @@ void Map::fButton(sf::Vector2i v)
 	sf::Vector2f mousePosition = sf::Vector2f(ceil(v.x / 64), ceil(v.y / 64));
 	sf::Vector2f tileLocation = sf::Vector2f(mousePosition.x, mousePosition.y);
 	Forest f = Forest();
-	for (auto &e : tiles[tileLocation].getAdj())
+	for (auto pair : tiles[tileLocation].getAdj())
 	{
-		f.addEdge(*e);
+		auto &e = pair.second;
+		f.addEdge(tileLocation, *e);
 	}
 	f.setUnit(tiles[tileLocation].getUnit());
 	tiles[tileLocation] = f;
+}
+
+Tile* Map::getClosest(Tile& t)
+{
+	Tile* highest = nullptr;
+	int cost = 0;
+	for (auto pair : t.getAdj())
+	{
+		auto a = pair.second;
+		if (highest)
+		{
+			if (highest->getSCost() < a->getSCost())
+			{
+				highest = a;
+				targetLocation = pair.first;
+				cost = highest->getSCost();
+			}
+		}
+		else
+		{
+			highest = a;
+			targetLocation = pair.first;
+			cost = highest->getSCost();
+		}
+	}
+	return highest;
 }
