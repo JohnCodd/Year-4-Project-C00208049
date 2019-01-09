@@ -3,9 +3,13 @@
 static double const MS_PER_UPDATE = 10.0;
 
 Game::Game()
-	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(30, 20)
+	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(mapWidth, mapHeight)
 {
 	m_window.setFramerateLimit(60);
+	backView.setSize(sf::Vector2f(windowWidth, windowHeight));
+	gameView.setSize(sf::Vector2f(mapWidth * tileSize, mapHeight * tileSize));
+	gameView.setCenter(sf::Vector2f((mapWidth * tileSize) / 2, (mapHeight * tileSize) / 2));
+	gameView.setViewport(sf::FloatRect(0.20f, 0.0f, windowHeight / windowWidth, 1.0f));
 	if (!m_font.loadFromFile("./times.ttf"))
 	{
 		std::string s("Error loading font");
@@ -55,7 +59,7 @@ void Game::processEvents()
 		{
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
-				m_map.leftclick(event);
+				m_map.leftclick(event, tileSize);
 			}
 			else if (event.mouseButton.button == sf::Mouse::Right)
 			{
@@ -66,7 +70,7 @@ void Game::processEvents()
 		{
 			if (event.key.code == sf::Keyboard::F)
 			{
-				m_map.fButton(sf::Mouse::getPosition(m_window));
+				m_map.fButton(sf::Mouse::getPosition(m_window), tileSize);
 			}
 		}
 	}
@@ -79,9 +83,11 @@ void Game::update(double dt)
 void Game::render()
 {
 	m_window.clear(sf::Color(0, 0, 0, 0));
+	//Experimental game view
+	//m_window.setView(gameView);
 	sf::Text name = sf::Text("Square Wars", m_font, 30);
 	name.setPosition(100, 100);
-	m_map.render(m_window);
+	m_map.render(m_window, tileSize);
 	//m_window.draw(name);
 	m_window.display();
 }

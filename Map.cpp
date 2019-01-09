@@ -43,6 +43,11 @@ Map::Map(int x, int y)
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
+	if (!enemyBorder.loadFromFile("./Resources/Tilesets/EnemyHighlight.png"))
+	{
+		std::string s("Error loading texture");
+		throw std::exception(s.c_str());
+	}
 	for (int i = 0; i < sizeY; i++)
 	{
 		for (int j = 0; j < sizeX; j++)
@@ -82,7 +87,7 @@ Map::Map(int x, int y)
 	tiles[location].setUnit(new Tank(location, 1));
 }
 
-void Map::render(sf::RenderWindow & window)
+void Map::render(sf::RenderWindow & window, float tileSize)
 {
 	for (auto &t : tiles)
 	{
@@ -101,15 +106,21 @@ void Map::render(sf::RenderWindow & window)
 		{
 			tileTexture.setFillColor(sf::Color::Transparent);
 		}
-		tileTexture.setPosition(t.first.x * 64, t.first.y * 64);
-		tileTexture.setSize(sf::Vector2f(64, 64));
+		tileTexture.setPosition(t.first.x * tileSize, t.first.y * tileSize);
+		tileTexture.setSize(sf::Vector2f(tileSize, tileSize));
 		sf::RectangleShape highlight;
 		if (t.second.getHighlighted() == true)
 		{
 			highlight.setTexture(&highlightBorder);
-			highlight.setPosition(t.first.x * 64, t.first.y * 64);
-			highlight.setSize(sf::Vector2f(64, 64));
+			highlight.setPosition(t.first.x * tileSize, t.first.y * tileSize);
+			highlight.setSize(sf::Vector2f(tileSize, tileSize));
 			//highlight.setFillColor(sf::Color(18, 209, 226, 120));
+		}
+		else if (t.second.getEnemy() == true)
+		{
+			highlight.setTexture(&enemyBorder);
+			highlight.setPosition(t.first.x * tileSize, t.first.y * tileSize);
+			highlight.setSize(sf::Vector2f(tileSize, tileSize));
 		}
 		else
 		{
@@ -145,8 +156,8 @@ void Map::render(sf::RenderWindow & window)
 		{
 			unitLocation = t.second.getUnit()->getLocation();
 		}
-		unitTexture.setPosition((unitLocation.x) * 64, (unitLocation.y) * 64);
-		unitTexture.setSize(sf::Vector2f(64, 64));
+		unitTexture.setPosition((unitLocation.x) * tileSize, (unitLocation.y) * tileSize);
+		unitTexture.setSize(sf::Vector2f(tileSize, tileSize));
 		window.draw(tileTexture);
 		window.draw(highlight);
 		window.draw(unitTexture);
@@ -154,9 +165,9 @@ void Map::render(sf::RenderWindow & window)
 	}
 }
 
-void Map::leftclick(sf::Event e)
+void Map::leftclick(sf::Event e, int tileSize)
 {
-	sf::Vector2f mousePosition = sf::Vector2f(ceil(e.mouseButton.x / 64), ceil(e.mouseButton.y / 64));
+	sf::Vector2f mousePosition = sf::Vector2f(ceil(e.mouseButton.x / tileSize), ceil(e.mouseButton.y / tileSize));
 	sf::Vector2f tileLocation = sf::Vector2f(mousePosition.x, mousePosition.y);
 	if (tiles[tileLocation].getUnit())
 	{
@@ -273,6 +284,10 @@ void Map::moveSearch(Tile& start, int moves)
 		for (auto &pair : queue.front()->getAdj())
 		{
 			auto & e = pair.second;
+			if (pair.first == sf::Vector2f(4, 11))
+			{
+				std::cout << "Test" << std::endl;
+			}
 			int movesRemaining = queue.front()->getSCost() - e->getCost();
 			if (movesRemaining >= 0)
 			{
@@ -282,6 +297,7 @@ void Map::moveSearch(Tile& start, int moves)
 				}
 				if (e->getUnit() != nullptr)
 				{
+					//Check if the unit is friendly: if true it can pass through
 					if (e->getVisited() == false && e->getUnit()->getOwner() == start.getUnit()->getOwner())
 					{
 						e->setSCost(movesRemaining);
@@ -289,6 +305,10 @@ void Map::moveSearch(Tile& start, int moves)
 						e->setHighlight(true);
 						e->setPrevious(*queue.front());
 						queue.push_back(e);
+					}
+					else
+					{
+						e->setEnemy(true);
 					}
 				}
 				else
@@ -303,6 +323,24 @@ void Map::moveSearch(Tile& start, int moves)
 					}
 				}
 			}
+			if (checkRange(*e))
+			{
+				if (e->getUnit() != nullptr)
+				{
+					//Check if the unit is friendly: if true it can pass through
+					if (e->getVisited() == false && e->getUnit()->getOwner() == start.getUnit()->getOwner())
+					{
+					}
+					else
+					{
+						e->setEnemy(true);
+					}
+				}
+			}
+			if (pair.first == sf::Vector2f(4, 10))
+			{
+				std::cout << "Test" << std::endl;
+			}
 		}
 		queue.pop_front();
 	}
@@ -313,6 +351,7 @@ void Map::clearTiles()
 	for (auto const& a : tiles)
 	{
 		tiles[a.first].setHighlight(false);
+		tiles[a.first].setEnemy(false);
 	}
 }
 
@@ -329,9 +368,9 @@ bool Map::checkRange(Tile & tile)
 	return false;
 }
 
-void Map::fButton(sf::Vector2i v)
+void Map::fButton(sf::Vector2i v, int tileSize)
 {
-	sf::Vector2f mousePosition = sf::Vector2f(ceil(v.x / 64), ceil(v.y / 64));
+	sf::Vector2f mousePosition = sf::Vector2f(ceil(v.x / tileSize), ceil(v.y / tileSize));
 	sf::Vector2f tileLocation = sf::Vector2f(mousePosition.x, mousePosition.y);
 	Forest f = Forest();
 	for (auto pair : tiles[tileLocation].getAdj())
@@ -350,20 +389,23 @@ Tile* Map::getClosest(Tile& t)
 	for (auto pair : t.getAdj())
 	{
 		auto a = pair.second;
-		if (highest)
+		if (a->getHighlighted())
 		{
-			if (highest->getSCost() < a->getSCost())
+			if (highest)
+			{
+				if (highest->getSCost() < a->getSCost())
+				{
+					highest = a;
+					targetLocation = pair.first;
+					cost = highest->getSCost();
+				}
+			}
+			else
 			{
 				highest = a;
 				targetLocation = pair.first;
 				cost = highest->getSCost();
 			}
-		}
-		else
-		{
-			highest = a;
-			targetLocation = pair.first;
-			cost = highest->getSCost();
 		}
 	}
 	return highest;

@@ -16,10 +16,10 @@ public:
 	Map();
 	Map(int sizeX, int sizeY);
 	~Map() {};
-	void render(sf::RenderWindow & window);
-	void leftclick(sf::Event e);
+	void render(sf::RenderWindow & window, float tileSize);
+	void leftclick(sf::Event e, int tileSize);
 	void rightclick(sf::Event e);
-	void fButton(sf::Vector2i v);
+	void fButton(sf::Vector2i v, int tileSize);
 	void expandtile(sf::Vector2f location, int moves);
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();
@@ -35,4 +35,5 @@ private:
 	sf::Texture tileset;
 	sf::Texture spritesheet;
 	sf::Texture highlightBorder;
+	sf::Texture enemyBorder;
 };

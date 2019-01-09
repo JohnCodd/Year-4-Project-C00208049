@@ -65,6 +65,11 @@ public:
 	{
 		m_previous = &t;
 	}
+	virtual void setEnemy(bool b)
+	{
+		enemy = b;
+	}
+	virtual bool getEnemy() { return enemy; }
 
 	std::list<std::pair<sf::Vector2f, Tile*>>& getAdj() { return adj; };
 
@@ -73,6 +78,7 @@ protected:
 	float defense;
 	std::string type;
 	bool highlighted = false;
+	bool enemy = false;
 private:
 	//sf::RectangleShape* m_texture;
 	bool visited;
