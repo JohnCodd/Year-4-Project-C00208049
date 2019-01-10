@@ -14,13 +14,13 @@ protected:
 	void update(double dt);
 	void render();
 	void processEvents();
-	double windowWidth = 1366;
-	double windowHeight = 768;
-	int mapWidth = 15;
+	double windowWidth = 1620;
+	double windowHeight = 960;
+	int mapWidth = 20;
 	int mapHeight = 15;
-	float tileSize = 64;
+	int tileSize = 64;
 	sf::RenderWindow m_window;
-	sf::View gameView, backView;
+	sf::View gameView;
 	sf::Font m_font;
 	Map m_map;
 };

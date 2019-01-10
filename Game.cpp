@@ -3,10 +3,9 @@
 static double const MS_PER_UPDATE = 10.0;
 
 Game::Game()
-	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(mapWidth, mapHeight)
+	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(mapWidth, mapHeight, tileSize)
 {
 	m_window.setFramerateLimit(60);
-	backView.setSize(sf::Vector2f(windowWidth, windowHeight));
 	gameView.setSize(sf::Vector2f(mapWidth * tileSize, mapHeight * tileSize));
 	gameView.setCenter(sf::Vector2f((mapWidth * tileSize) / 2, (mapHeight * tileSize) / 2));
 	gameView.setViewport(sf::FloatRect(0.20f, 0.0f, windowHeight / windowWidth, 1.0f));
@@ -59,7 +58,20 @@ void Game::processEvents()
 		{
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
-				m_map.leftclick(event, tileSize);
+				std::cout << event.mouseButton.x << ", " << event.mouseButton.y << std::endl;
+
+				sf::FloatRect gameMap = sf::FloatRect(windowWidth * gameView.getViewport().left, 0, windowWidth * gameView.getViewport().width, windowHeight);
+				sf::Vector2f mouse = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
+				//if (mouse.x > gameMap.left && mouse.x < gameMap.left + gameMap.width)
+				//{
+				//	sf::Vector2f mapSize = sf::Vector2f(mapWidth * tileSize, mapHeight * tileSize);
+				//	sf::Vector2f windowMouse = sf::Vector2f(mouse.x - gameMap.left, mouse.y - gameMap.top);
+				//	sf::Vector2f conversion = sf::Vector2f(windowHeight / mapSize.x, windowHeight / mapSize.y);
+				//	//sf::Vector2f mapMouse = sf::Vector2f(windowMouse.x * conversion.x, windowMouse.y * conversion.y);
+				//	sf::Vector2f mapMouse = m_window.mapPixelToCoords(sf::Vector2i(mouse));
+				//	std::cout << "In map" << std::endl;
+					m_map.leftclickMap(m_window.mapPixelToCoords(sf::Vector2i(mouse)));
+				//}
 			}
 			else if (event.mouseButton.button == sf::Mouse::Right)
 			{
@@ -70,7 +82,7 @@ void Game::processEvents()
 		{
 			if (event.key.code == sf::Keyboard::F)
 			{
-				m_map.fButton(sf::Mouse::getPosition(m_window), tileSize);
+				m_map.fButton(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 			}
 		}
 	}

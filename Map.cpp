@@ -24,10 +24,11 @@ Map::Map()
 	}
 }
 
-Map::Map(int x, int y)
+Map::Map(int x, int y, int tSize)
 {
 	sizeX = x;
 	sizeY = y;
+	tileSize = tSize;
 	if (!tileset.loadFromFile("./Resources/Tilesets/tileset.png"))
 	{
 		std::string s("Error loading texture");
@@ -53,21 +54,21 @@ Map::Map(int x, int y)
 		for (int j = 0; j < sizeX; j++)
 		{
 			Plains p = Plains();
+			p.setRect(sf::IntRect(j * tileSize, i * tileSize, tileSize, tileSize));
 			tiles[sf::Vector2f(j,i)] = p;
 			sf::Vector2f location = sf::Vector2f(j, i);
 			sf::Vector2f newLocation;
-			int current = (j + (i * 50));
 			if (i > 0)
 			{
 				newLocation = sf::Vector2f(j, i - 1);
 				tiles[location].addEdge(newLocation, tiles[newLocation]);
 			}
-			if (j + 1 < 50)
+			if (j + 1 < sizeX)
 			{
 				newLocation = sf::Vector2f(j + 1, i);
 				tiles[location].addEdge(newLocation, tiles[newLocation]);
 			}
-			if (i + 1 < 50)
+			if (i + 1 < sizeY)
 			{
 				newLocation = sf::Vector2f(j, i + 1);
 				tiles[location].addEdge(newLocation, tiles[newLocation]);
@@ -165,10 +166,17 @@ void Map::render(sf::RenderWindow & window, float tileSize)
 	}
 }
 
-void Map::leftclick(sf::Event e, int tileSize)
+void Map::leftclickMap(sf::Vector2f v)
 {
-	sf::Vector2f mousePosition = sf::Vector2f(ceil(e.mouseButton.x / tileSize), ceil(e.mouseButton.y / tileSize));
-	sf::Vector2f tileLocation = sf::Vector2f(mousePosition.x, mousePosition.y);
+	sf::Vector2f mousePosition = sf::Vector2f(floor(v.x / tileSize), floor(v.y / tileSize));
+	sf::Vector2f tileLocation;
+	for (auto &t : tiles)
+	{
+		if (t.second.getRect().intersects(sf::IntRect(v.x, v.y, 2, 2)))
+		{
+			tileLocation = t.first;
+		}
+	}
 	if (tiles[tileLocation].getUnit())
 	{
 		if (selectedUnit == nullptr)
@@ -368,16 +376,24 @@ bool Map::checkRange(Tile & tile)
 	return false;
 }
 
-void Map::fButton(sf::Vector2i v, int tileSize)
+void Map::fButton(sf::Vector2f v)
 {
 	sf::Vector2f mousePosition = sf::Vector2f(ceil(v.x / tileSize), ceil(v.y / tileSize));
-	sf::Vector2f tileLocation = sf::Vector2f(mousePosition.x, mousePosition.y);
+	sf::Vector2f tileLocation;
+	for (auto &t : tiles)
+	{
+		if (t.second.getRect().intersects(sf::IntRect(v.x, v.y, 2, 2)))
+		{
+			tileLocation = t.first;
+		}
+	}
 	Forest f = Forest();
 	for (auto pair : tiles[tileLocation].getAdj())
 	{
 		auto &e = pair.second;
 		f.addEdge(tileLocation, *e);
 	}
+	f.setRect(sf::IntRect(tileLocation.x * tileSize, tileLocation.y * tileSize, tileSize, tileSize));
 	f.setUnit(tiles[tileLocation].getUnit());
 	tiles[tileLocation] = f;
 }

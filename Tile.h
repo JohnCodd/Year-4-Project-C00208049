@@ -71,7 +71,10 @@ public:
 	}
 	virtual bool getEnemy() { return enemy; }
 
-	std::list<std::pair<sf::Vector2f, Tile*>>& getAdj() { return adj; };
+	std::list<std::pair<sf::Vector2f, Tile*>>& getAdj() { return adj; }
+
+	virtual void setRect(sf::IntRect r) { rect = r; }
+	virtual sf::IntRect getRect() { return rect; }
 
 protected:
 	int moveCost;
@@ -85,5 +88,6 @@ private:
 	int searchCost;
 	Unit* m_unit = nullptr;
 	std::list<std::pair<sf::Vector2f, Tile*>> adj;
+	sf::IntRect rect;
 	Tile* m_previous;
 };

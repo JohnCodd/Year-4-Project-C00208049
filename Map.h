@@ -14,12 +14,12 @@ class Map
 {
 public:
 	Map();
-	Map(int sizeX, int sizeY);
+	Map(int sizeX, int sizeY, int tSize);
 	~Map() {};
 	void render(sf::RenderWindow & window, float tileSize);
-	void leftclick(sf::Event e, int tileSize);
+	void leftclickMap(sf::Vector2f e);
 	void rightclick(sf::Event e);
-	void fButton(sf::Vector2i v, int tileSize);
+	void fButton(sf::Vector2f v);
 	void expandtile(sf::Vector2f location, int moves);
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();
@@ -28,6 +28,7 @@ public:
 private:
 	int sizeX;
 	int sizeY;
+	float tileSize;
 	std::map<sf::Vector2f, Tile, VectorComparator> tiles;
 	std::map<sf::Vector2f, Unit, VectorComparator> units;
 	sf::Vector2f targetLocation;
