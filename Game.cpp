@@ -3,7 +3,7 @@
 static double const MS_PER_UPDATE = 10.0;
 
 Game::Game()
-	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(mapWidth, mapHeight, tileSize)
+	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(mapWidth, mapHeight, tileSize, playerTurn)
 {
 	m_window.setFramerateLimit(60);
 	gameView.setSize(sf::Vector2f(mapWidth * tileSize, mapHeight * tileSize));
@@ -62,15 +62,18 @@ void Game::processEvents()
 
 				sf::FloatRect gameMap = sf::FloatRect(windowWidth * gameView.getViewport().left, 0, windowWidth * gameView.getViewport().width, windowHeight);
 				sf::Vector2f mouse = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
-				//if (mouse.x > gameMap.left && mouse.x < gameMap.left + gameMap.width)
-				//{
-				//	sf::Vector2f mapSize = sf::Vector2f(mapWidth * tileSize, mapHeight * tileSize);
-				//	sf::Vector2f windowMouse = sf::Vector2f(mouse.x - gameMap.left, mouse.y - gameMap.top);
-				//	sf::Vector2f conversion = sf::Vector2f(windowHeight / mapSize.x, windowHeight / mapSize.y);
-				//	//sf::Vector2f mapMouse = sf::Vector2f(windowMouse.x * conversion.x, windowMouse.y * conversion.y);
-				//	sf::Vector2f mapMouse = m_window.mapPixelToCoords(sf::Vector2i(mouse));
-				//	std::cout << "In map" << std::endl;
+				if (mouse.x <= 1280)
+				{
+					//if (mouse.x > gameMap.left && mouse.x < gameMap.left + gameMap.width)
+					//{
+					//	sf::Vector2f mapSize = sf::Vector2f(mapWidth * tileSize, mapHeight * tileSize);
+					//	sf::Vector2f windowMouse = sf::Vector2f(mouse.x - gameMap.left, mouse.y - gameMap.top);
+					//	sf::Vector2f conversion = sf::Vector2f(windowHeight / mapSize.x, windowHeight / mapSize.y);
+					//	//sf::Vector2f mapMouse = sf::Vector2f(windowMouse.x * conversion.x, windowMouse.y * conversion.y);
+					//	sf::Vector2f mapMouse = m_window.mapPixelToCoords(sf::Vector2i(mouse));
+					//	std::cout << "In map" << std::endl;
 					m_map.leftclickMap(m_window.mapPixelToCoords(sf::Vector2i(mouse)));
+				}
 				//}
 			}
 			else if (event.mouseButton.button == sf::Mouse::Right)
@@ -97,9 +100,10 @@ void Game::render()
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	//Experimental game view
 	//m_window.setView(gameView);
-	sf::Text name = sf::Text("Square Wars", m_font, 30);
-	name.setPosition(100, 100);
+	std::string pText = "Player: " + std::to_string(static_cast<int>(playerTurn));
+	sf::Text currentTurn = sf::Text(pText, m_font, 30);
+	currentTurn.setPosition(1400, 100);
 	m_map.render(m_window, tileSize);
-	//m_window.draw(name);
+	m_window.draw(currentTurn);
 	m_window.display();
 }

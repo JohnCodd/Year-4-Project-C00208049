@@ -19,6 +19,7 @@ protected:
 	int mapWidth = 20;
 	int mapHeight = 15;
 	int tileSize = 64;
+	int playerTurn = 1;
 	sf::RenderWindow m_window;
 	sf::View gameView;
 	sf::Font m_font;

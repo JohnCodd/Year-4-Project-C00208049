@@ -14,7 +14,7 @@ class Map
 {
 public:
 	Map();
-	Map(int sizeX, int sizeY, int tSize);
+	Map(int sizeX, int sizeY, int tSize, int& turn);
 	~Map() {};
 	void render(sf::RenderWindow & window, float tileSize);
 	void leftclickMap(sf::Vector2f e);
@@ -28,6 +28,7 @@ public:
 private:
 	int sizeX;
 	int sizeY;
+	int* playerTurn;
 	float tileSize;
 	std::map<sf::Vector2f, Tile, VectorComparator> tiles;
 	std::map<sf::Vector2f, Unit, VectorComparator> units;
