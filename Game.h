@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "Map.h"
+#include "Button.h"
 
 class Game
 {
@@ -20,8 +21,10 @@ protected:
 	int mapHeight = 15;
 	int tileSize = 64;
 	int playerTurn = 1;
+	int maxPlayers = 2;
 	sf::RenderWindow m_window;
 	sf::View gameView;
 	sf::Font m_font;
 	Map m_map;
+	Button turnButton;
 };

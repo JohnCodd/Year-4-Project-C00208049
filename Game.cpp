@@ -4,6 +4,7 @@ static double const MS_PER_UPDATE = 10.0;
 
 Game::Game()
 	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(mapWidth, mapHeight, tileSize, playerTurn)
+	, turnButton(sf::Vector2f(1400, 500), sf::Vector2f(100, 100), m_font, "End Turn")
 {
 	m_window.setFramerateLimit(60);
 	gameView.setSize(sf::Vector2f(mapWidth * tileSize, mapHeight * tileSize));
@@ -14,6 +15,7 @@ Game::Game()
 		std::string s("Error loading font");
 		throw std::exception(s.c_str());
 	}
+
 }
 
 Game::~Game()
@@ -74,6 +76,20 @@ void Game::processEvents()
 					//	std::cout << "In map" << std::endl;
 					m_map.leftclickMap(m_window.mapPixelToCoords(sf::Vector2i(mouse)));
 				}
+				else if (turnButton.getRect().intersects(sf::FloatRect(mouse, sf::Vector2f(2, 2))))
+				{
+					for (int i = 1; i < maxPlayers; i++)
+					{
+						if (i = playerTurn)
+						{
+							playerTurn++;
+							if (playerTurn > maxPlayers)
+							{
+								playerTurn = 1;
+							}
+						}
+					}
+				}
 				//}
 			}
 			else if (event.mouseButton.button == sf::Mouse::Right)
@@ -105,5 +121,6 @@ void Game::render()
 	currentTurn.setPosition(1400, 100);
 	m_map.render(m_window, tileSize);
 	m_window.draw(currentTurn);
+	turnButton.render(m_window);
 	m_window.display();
 }

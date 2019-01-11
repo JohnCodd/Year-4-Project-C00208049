@@ -55,7 +55,7 @@ Map::Map(int x, int y, int tSize, int& turn)
 		for (int j = 0; j < sizeX; j++)
 		{
 			Plains p = Plains();
-			p.setRect(sf::IntRect(j * tileSize, i * tileSize, tileSize, tileSize));
+			p.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
 			tiles[sf::Vector2f(j,i)] = p;
 			sf::Vector2f location = sf::Vector2f(j, i);
 			sf::Vector2f newLocation;
@@ -173,7 +173,7 @@ void Map::leftclickMap(sf::Vector2f v)
 	sf::Vector2f tileLocation;
 	for (auto &t : tiles)
 	{
-		if (t.second.getRect().intersects(sf::IntRect(v.x, v.y, 2, 2)))
+		if (t.second.getRect().intersects(sf::FloatRect(v.x, v.y, 2, 2)))
 		{
 			tileLocation = t.first;
 		}
@@ -386,7 +386,7 @@ void Map::fButton(sf::Vector2f v)
 	sf::Vector2f tileLocation;
 	for (auto &t : tiles)
 	{
-		if (t.second.getRect().intersects(sf::IntRect(v.x, v.y, 2, 2)))
+		if (t.second.getRect().intersects(sf::FloatRect(v.x, v.y, 2, 2)))
 		{
 			tileLocation = t.first;
 		}
@@ -397,7 +397,7 @@ void Map::fButton(sf::Vector2f v)
 		auto &e = pair.second;
 		f.addEdge(tileLocation, *e);
 	}
-	f.setRect(sf::IntRect(tileLocation.x * tileSize, tileLocation.y * tileSize, tileSize, tileSize));
+	f.setRect(sf::FloatRect(tileLocation.x * tileSize, tileLocation.y * tileSize, tileSize, tileSize));
 	f.setUnit(tiles[tileLocation].getUnit());
 	tiles[tileLocation] = f;
 }
