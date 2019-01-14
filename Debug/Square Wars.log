@@ -26,7 +26,7 @@ c:\users\c00208049\documents\4th year project\square wars\game.cpp(66): warning 
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(122): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\game.cpp(118): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Main.cpp
   Generating Code...
   Square Wars.vcxproj -> C:\Users\c00208049\Documents\4th Year Project\Square Wars\Debug\Square Wars.exe

@@ -78,17 +78,13 @@ void Game::processEvents()
 				}
 				else if (turnButton.getRect().intersects(sf::FloatRect(mouse, sf::Vector2f(2, 2))))
 				{
-					for (int i = 1; i < maxPlayers; i++)
+						
+					playerTurn++;
+					if (playerTurn > maxPlayers)
 					{
-						if (i = playerTurn)
-						{
-							playerTurn++;
-							if (playerTurn > maxPlayers)
-							{
-								playerTurn = 1;
-							}
-						}
+						playerTurn = 1;
 					}
+						
 				}
 				//}
 			}
