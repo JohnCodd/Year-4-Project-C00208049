@@ -7,9 +7,13 @@ Game::Game()
 	, turnButton(sf::Vector2f(1400, 500), sf::Vector2f(100, 100), m_font, "End Turn")
 {
 	m_window.setFramerateLimit(60);
-	gameView.setSize(sf::Vector2f(mapWidth * tileSize, mapHeight * tileSize));
-	gameView.setCenter(sf::Vector2f((mapWidth * tileSize) / 2, (mapHeight * tileSize) / 2));
-	gameView.setViewport(sf::FloatRect(0.20f, 0.0f, windowHeight / windowWidth, 1.0f));
+	gameView.setSize(sf::Vector2f(20 * tileSize, 15 * tileSize));
+	gameView.setCenter(sf::Vector2f((20 * tileSize) / 2, (15 * tileSize) / 2));
+	float gameWindowWidth = (20 * tileSize) / windowWidth;
+	gameView.setViewport(sf::FloatRect(0.0f, 0.0f, gameWindowWidth, 1.0f));
+	backView.setSize(windowWidth, windowHeight);
+	backView.setCenter(windowWidth / 2, windowHeight / 2);
+	backView.setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f));
 	if (!m_font.loadFromFile("./times.ttf"))
 	{
 		std::string s("Error loading font");
@@ -64,8 +68,8 @@ void Game::processEvents()
 
 				sf::FloatRect gameMap = sf::FloatRect(windowWidth * gameView.getViewport().left, 0, windowWidth * gameView.getViewport().width, windowHeight);
 				sf::Vector2f mouse = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
-				if (mouse.x <= 1280)
-				{
+				/*if (mouse.x <= 1280)
+				{*/
 					//if (mouse.x > gameMap.left && mouse.x < gameMap.left + gameMap.width)
 					//{
 					//	sf::Vector2f mapSize = sf::Vector2f(mapWidth * tileSize, mapHeight * tileSize);
@@ -75,8 +79,8 @@ void Game::processEvents()
 					//	sf::Vector2f mapMouse = m_window.mapPixelToCoords(sf::Vector2i(mouse));
 					//	std::cout << "In map" << std::endl;
 					m_map.leftclickMap(m_window.mapPixelToCoords(sf::Vector2i(mouse)));
-				}
-				else if (turnButton.getRect().intersects(sf::FloatRect(mouse, sf::Vector2f(2, 2))))
+				//}
+				if (turnButton.getRect().intersects(sf::FloatRect(mouse, sf::Vector2f(2, 2))))
 				{
 						
 					playerTurn++;
@@ -110,13 +114,15 @@ void Game::update(double dt)
 void Game::render()
 {
 	m_window.clear(sf::Color(0, 0, 0, 0));
-	//Experimental game view
-	//m_window.setView(gameView);
+	m_window.setView(backView);
+
 	std::string pText = "Player: " + std::to_string(static_cast<int>(playerTurn));
 	sf::Text currentTurn = sf::Text(pText, m_font, 30);
 	currentTurn.setPosition(1400, 100);
-	m_map.render(m_window, tileSize);
 	m_window.draw(currentTurn);
 	turnButton.render(m_window);
+	//Experimental game view
+	m_window.setView(gameView);
+	m_map.render(m_window, tileSize);
 	m_window.display();
 }

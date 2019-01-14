@@ -180,12 +180,15 @@ void Map::leftclickMap(sf::Vector2f v)
 	}
 	if (tiles[tileLocation].getUnit())
 	{
-		if (selectedUnit == nullptr && tiles[tileLocation].getUnit()->getOwner() == *playerTurn)
+		if (selectedUnit == nullptr)
 		{
-			selectedUnit = tiles[tileLocation].getUnit();
-			moveSearch(tiles[tileLocation], tiles[tileLocation].getUnit()->getMoves());
-			//expandtile(sf::Vector2f(static_cast<int>((mousePosition.x) + 1), static_cast<int>((mousePosition.y) + 1)), units[tileLocation].getMoves());
-			std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
+			if (tiles[tileLocation].getUnit()->getOwner() == *playerTurn)
+			{
+				selectedUnit = tiles[tileLocation].getUnit();
+				moveSearch(tiles[tileLocation], tiles[tileLocation].getUnit()->getMoves());
+				//expandtile(sf::Vector2f(static_cast<int>((mousePosition.x) + 1), static_cast<int>((mousePosition.y) + 1)), units[tileLocation].getMoves());
+				std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
+			}
 		}
 		else if (tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(tiles[tileLocation]))
 		{

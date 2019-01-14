@@ -23,7 +23,7 @@ protected:
 	int playerTurn = 1;
 	int maxPlayers = 2;
 	sf::RenderWindow m_window;
-	sf::View gameView;
+	sf::View gameView, backView;
 	sf::Font m_font;
 	Map m_map;
 	Button turnButton;
