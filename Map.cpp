@@ -180,34 +180,31 @@ void Map::leftclickMap(sf::Vector2f v)
 	}
 	if (tiles[tileLocation].getUnit())
 	{
-		if (tiles[tileLocation].getUnit()->getOwner() == *playerTurn)
+		if (selectedUnit == nullptr && tiles[tileLocation].getUnit()->getOwner() == *playerTurn)
 		{
-			if (selectedUnit == nullptr)
+			selectedUnit = tiles[tileLocation].getUnit();
+			moveSearch(tiles[tileLocation], tiles[tileLocation].getUnit()->getMoves());
+			//expandtile(sf::Vector2f(static_cast<int>((mousePosition.x) + 1), static_cast<int>((mousePosition.y) + 1)), units[tileLocation].getMoves());
+			std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
+		}
+		else if (tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(tiles[tileLocation]))
+		{
+			tiles[tileLocation].setUnit(nullptr);
+			Tile* closest = getClosest(tiles[tileLocation]);
+			if (&tiles[selectedUnit->getLocation()] != closest)
 			{
-				selectedUnit = tiles[tileLocation].getUnit();
-				moveSearch(tiles[tileLocation], tiles[tileLocation].getUnit()->getMoves());
-				//expandtile(sf::Vector2f(static_cast<int>((mousePosition.x) + 1), static_cast<int>((mousePosition.y) + 1)), units[tileLocation].getMoves());
-				std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
-			}
-			else if (tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(tiles[tileLocation]))
-			{
-				tiles[tileLocation].setUnit(nullptr);
-				Tile* closest = getClosest(tiles[tileLocation]);
-				if (&tiles[selectedUnit->getLocation()] != closest)
-				{
-					Unit movingUnit = *selectedUnit;
-					//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
-					//{
-					//	//return p.second == *closest;
-					//});
+				Unit movingUnit = *selectedUnit;
+				//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
+				//{
+				//	//return p.second == *closest;
+				//});
 
-					movingUnit.setLocation(targetLocation);
-					closest->setUnit(new Unit(movingUnit));
-					tiles[selectedUnit->getLocation()].setUnit(nullptr);
-				}
-				selectedUnit = nullptr;
-				clearTiles();
+				movingUnit.setLocation(targetLocation);
+				closest->setUnit(new Unit(movingUnit));
+				tiles[selectedUnit->getLocation()].setUnit(nullptr);
 			}
+			selectedUnit = nullptr;
+			clearTiles();
 		}
 	}
 	else if (tiles[tileLocation].getHighlighted() == true)
