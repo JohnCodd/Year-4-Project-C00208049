@@ -24,10 +24,8 @@ public:
 	{
 		return this->moveCost;
 	}
-	virtual void setUnit(Unit* u)
-	{
-		m_unit = u;
-	}
+	virtual int getDefense() { return this->defense; }
+	virtual void setUnit(Unit* u) { m_unit = u; }
 
 	virtual void addEdge(sf::Vector2f v, Tile& tile)
 	{
@@ -78,7 +76,7 @@ public:
 
 protected:
 	int moveCost;
-	float defense;
+	int defense;
 	std::string type;
 	bool highlighted = false;
 	bool enemy = false;

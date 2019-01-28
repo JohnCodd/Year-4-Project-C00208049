@@ -22,6 +22,14 @@ public:
 	{
 		return this->movement;
 	}
+	virtual int getHealth()
+	{
+		return this->health;
+	}
+	virtual int getPower()
+	{
+		return this->power;
+	}
 	virtual int getOwner()
 	{
 		return this->player;
@@ -34,8 +42,12 @@ public:
 	{
 		this->turnTaken = b;
 	}
+	virtual void damage(int d)
+	{
+		health -= d;
+	}
 protected:
-	int health;
+	int health, maxHealth;
 	int power;
 	int movement;
 	int player;

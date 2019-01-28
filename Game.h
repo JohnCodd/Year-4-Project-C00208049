@@ -23,8 +23,13 @@ protected:
 	int playerTurn = 1;
 	int maxPlayers = 2;
 	sf::RenderWindow m_window;
-	sf::View gameView, backView;
+	sf::View gameView, backView, sideView;
 	sf::Font m_font;
+	sf::Text currentTurn, unitHealth, unitMoves, terrainDefense, terrainCost;
+	bool unitHighlighted = false;
+	bool tileHighlighted = false;
+	float gameWindowWidth;
+	float sideBarX;
 	Map m_map;
 	Button turnButton;
 };

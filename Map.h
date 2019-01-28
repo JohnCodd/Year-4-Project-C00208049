@@ -24,7 +24,11 @@ public:
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();
 	bool checkRange(Tile& tile);
+	bool checkTile(sf::Vector2f v);
 	Tile* getClosest(Tile& t);
+	sf::Vector2f convertToKey(sf::Vector2f v);
+	Tile& getTile(sf::Vector2f v);
+	Unit& getUnit(sf::Vector2f v);
 private:
 	int sizeX;
 	int sizeY;

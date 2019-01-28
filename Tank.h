@@ -6,7 +6,8 @@ class Tank : public Unit
 public:
 	Tank()
 	{
-		health = 100;
+		maxHealth = 100;
+		health = maxHealth;
 		power = 50;
 		movement = 6;
 		type = "Tank";
@@ -14,7 +15,8 @@ public:
 	};
 	Tank(sf::Vector2f location, int p)
 	{
-		health = 100;
+		maxHealth = 100;
+		health = maxHealth;
 		power = 50;
 		movement = 6;
 		type = "Tank";
