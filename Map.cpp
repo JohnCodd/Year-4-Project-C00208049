@@ -199,9 +199,9 @@ void Map::leftclickMap(sf::Vector2f v)
 			else if (tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(tiles[tileLocation]))
 			{
 				Unit* targetUnit = tiles[tileLocation].getUnit();
-				targetUnit->damage(selectedUnit->getPower() + 10 - targetTile->getDefense());
-				selectedUnit->damage(targetUnit->getPower());
 				Tile* closest = getClosest(tiles[tileLocation]);
+				targetUnit->damage(selectedUnit->getPower() + 10 - targetTile->getDefense());
+				selectedUnit->damage(targetUnit->getPower() - closest->getDefense());
 				if (&tiles[selectedUnit->getLocation()] != closest)
 				{
 					Unit movingUnit = *selectedUnit;

@@ -119,14 +119,30 @@ void Game::processEvents()
 			{
 				m_map.fButton(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 			}
+			if (event.key.code == sf::Keyboard::Right)
+			{
+				gameView.setCenter(gameView.getCenter().x + tileSize, gameView.getCenter().y);
+			}
+			if (event.key.code == sf::Keyboard::Left)
+			{
+				gameView.setCenter(gameView.getCenter().x - tileSize, gameView.getCenter().y);
+			}
+			if (event.key.code == sf::Keyboard::Up)
+			{
+				gameView.setCenter(gameView.getCenter().x, gameView.getCenter().y - tileSize);
+			}
+			if (event.key.code == sf::Keyboard::Down)
+			{
+				gameView.setCenter(gameView.getCenter().x, gameView.getCenter().y + tileSize);
+			}
 		}
 	}
 }
 
 void Game::update(double dt)
 {
-	sf::Vector2i mousePosition = sf::Mouse::getPosition(m_window);
-	if (mousePosition.x < sideBarX)
+	sf::Vector2f mousePosition = m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window));
+	if (mousePosition.x < sideBarX && mousePosition.x > 0 && mousePosition.y > 0 && mousePosition.y < mapHeight * tileSize)
 	{
 		sf::Vector2f mapKey = m_map.convertToKey(sf::Vector2f(mousePosition));
 		if (m_map.checkTile(mapKey))
@@ -156,8 +172,11 @@ void Game::render()
 {
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	m_window.setView(backView);
-
+	sf::RectangleShape sideBar = sf::RectangleShape(sf::Vector2f(windowWidth - sideBarX, windowHeight));
+	sideBar.setPosition(sideBarX, 0);
+	sideBar.setFillColor(sf::Color(79, 48, 15));
 	std::string pText = "Player: " + std::to_string(static_cast<int>(playerTurn));
+	m_window.draw(sideBar);
 	currentTurn.setString(pText);
 	m_window.draw(currentTurn);
 	turnButton.render(m_window);
