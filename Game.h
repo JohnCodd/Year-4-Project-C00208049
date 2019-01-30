@@ -4,6 +4,7 @@
 #include <string>
 #include "Map.h"
 #include "Button.h"
+#include "ResourceManager.h"
 
 class Game
 {
@@ -32,4 +33,5 @@ protected:
 	float sideBarX;
 	Map m_map;
 	Button turnButton;
+	ResourceManager m_rManager;
 };

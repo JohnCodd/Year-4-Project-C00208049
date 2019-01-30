@@ -82,11 +82,11 @@ Map::Map(int x, int y, int tSize, int& turn)
 		}
 	}
 	sf::Vector2f location = sf::Vector2f(10, 6);
-	tiles[location].setUnit(new Tank(location, 1));
+	tiles[location].setUnit(new Tank(location, 1, spritesheet, tileSize));
 	location = sf::Vector2f(6, 10);
-	tiles[location].setUnit(new Tank(location, 2));
+	tiles[location].setUnit(new Tank(location, 2, spritesheet, tileSize));
 	location = sf::Vector2f(4, 10);
-	tiles[location].setUnit(new Tank(location, 1));
+	tiles[location].setUnit(new Tank(location, 1, spritesheet, tileSize));
 }
 
 void Map::render(sf::RenderWindow & window, float tileSize)
@@ -162,7 +162,11 @@ void Map::render(sf::RenderWindow & window, float tileSize)
 		unitTexture.setSize(sf::Vector2f(tileSize, tileSize));
 		window.draw(tileTexture);
 		window.draw(highlight);
-		window.draw(unitTexture);
+		if (t.second.getUnit())
+		{
+			t.second.getUnit()->render(window);
+		}
+		//window.draw(unitTexture);
 		
 	}
 }
