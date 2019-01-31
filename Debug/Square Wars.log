@@ -1,51 +1,74 @@
-﻿  Game.cpp
+﻿  Map.cpp
+c:\users\c00208049\documents\4th year project\square wars\tile.h(16): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\c00208049\documents\4th year project\square wars\tile.h(18): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\c00208049\documents\4th year project\square wars\tile.h(20): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
 c:\users\c00208049\documents\4th year project\square wars\tank.h(36): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(6): warning C4244: 'argument': conversion from 'double' to 'unsigned int', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(11): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(17): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(12): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(17): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(23): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(20): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(21): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(34): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(64): warning C4244: '-=': conversion from 'double' to 'sf::Int32', possible loss of data
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(87): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(32): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(62): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(88): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(62): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(64): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(177): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(65): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\c00208049\documents\4th year project\square wars\game.cpp(197): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Main.cpp
-c:\users\c00208049\documents\4th year project\square wars\tank.h(36): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(69): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-  ResourceManager.cpp
-  Generating Code...
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(74): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(79): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(84): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(90): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(92): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(94): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\c00208049\documents\4th year project\square wars\map.cpp(431): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Square Wars.vcxproj -> C:\Users\c00208049\Documents\4th Year Project\Square Wars\Debug\Square Wars.exe

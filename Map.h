@@ -15,13 +15,12 @@ class Map
 {
 public:
 	Map();
-	Map(int sizeX, int sizeY, int tSize, int& turn);
+	Map(int sizeX, int sizeY, int tSize, int& turn, ResourceManager& rm);
 	~Map() {};
-	void setResourceManager(ResourceManager& rm);
 	void render(sf::RenderWindow & window, float tileSize);
 	void leftclickMap(sf::Vector2f e);
 	void rightclick(sf::Event e);
-	void fButton(sf::Vector2f v);
+	void fButton(sf::Vector2f v, ResourceManager& rm);
 	void expandtile(sf::Vector2f location, int moves);
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();

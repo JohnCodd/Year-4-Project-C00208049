@@ -3,7 +3,8 @@
 static double const MS_PER_UPDATE = 10.0;
 
 Game::Game()
-	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(mapWidth, mapHeight, tileSize, playerTurn)
+	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_rManager(),
+		 m_map(mapWidth, mapHeight, tileSize, playerTurn, m_rManager)
 	
 {
 	m_window.setFramerateLimit(60);
@@ -119,7 +120,7 @@ void Game::processEvents()
 		{
 			if (event.key.code == sf::Keyboard::F)
 			{
-				m_map.fButton(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
+				m_map.fButton(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)), m_rManager);
 			}
 			if (event.key.code == sf::Keyboard::Right)
 			{

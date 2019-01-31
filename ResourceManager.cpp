@@ -4,6 +4,7 @@
 
 ResourceManager::ResourceManager()
 {
+	//loadTexture("tileset", "./Resources/Tilesets/tileset.png");
 }
 
 
@@ -13,24 +14,24 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::loadTexture(std::string name, std::string path)
 {
-	sf::Texture t = sf::Texture();
+	sf::Texture t;
 	if (!t.loadFromFile(path))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
-	textures[name] = t;
+	textures[name] = std::move(t);
 }
 
 void ResourceManager::loadFont(std::string name, std::string path)
 {
-	sf::Font f = sf::Font();
+	sf::Font f;
 	if (!f.loadFromFile(path))
 	{
 		std::string s("Error loading font");
 		throw std::exception(s.c_str());
 	}
-	fonts[name] = f;
+	fonts[name] = std::move(f);
 }
 
 sf::Texture& ResourceManager::getTexture(std::string name)
