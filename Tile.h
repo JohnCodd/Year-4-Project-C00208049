@@ -7,7 +7,19 @@ class Tile
 {
 public:
 	Tile() {};
-	~Tile() {};
+	Tile(sf::Vector2f location, sf::Texture& tileset, sf::Texture& hR, sf::Texture& hB, int tSize)
+		: gridLocation(location)
+		, tileSize(tSize)
+		, moveCost()
+	{
+		sprite.setTexture(&tileset);
+		sprite.setSize(sf::Vector2f(tileSize, tileSize));
+		highlightBlue.setTexture(&hB);
+		highlightBlue.setSize(sf::Vector2f(tileSize, tileSize));
+		highlightRed.setTexture(&hR);
+		highlightRed.setSize(sf::Vector2f(tileSize, tileSize));
+	};
+	virtual ~Tile() {};
 	virtual std::string getType()
 	{
 		return this->type;
@@ -74,12 +86,33 @@ public:
 	virtual void setRect(sf::FloatRect r) { rect = r; }
 	virtual sf::FloatRect getRect() { return rect; }
 
+	virtual void render(sf::RenderWindow& window) {
+		sprite.setPosition((gridLocation.x) * tileSize, (gridLocation.y) * tileSize);
+		highlightBlue.setPosition((gridLocation.x) * tileSize, (gridLocation.y) * tileSize);
+		highlightRed.setPosition((gridLocation.x) * tileSize, (gridLocation.y) * tileSize);
+		window.draw(sprite);
+		if (highlighted)
+		{
+			window.draw(highlightBlue);
+		}
+		else if (enemy)
+		{
+			window.draw(highlightRed);
+		}
+	}
+
 protected:
 	int moveCost;
 	int defense;
+	int tileSize;
 	std::string type;
 	bool highlighted = false;
 	bool enemy = false;
+	sf::Vector2f gridLocation;
+	sf::RectangleShape sprite;
+	sf::RectangleShape highlightSprite;
+	sf::RectangleShape highlightRed;
+	sf::RectangleShape highlightBlue;
 private:
 	//sf::RectangleShape* m_texture;
 	bool visited;

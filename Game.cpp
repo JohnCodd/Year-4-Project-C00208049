@@ -3,10 +3,12 @@
 static double const MS_PER_UPDATE = 10.0;
 
 Game::Game()
-	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_map(mapWidth, mapHeight, tileSize, playerTurn)
+	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_rManager(),
+		 m_map(mapWidth, mapHeight, tileSize, playerTurn, m_rManager)
 	
 {
 	m_window.setFramerateLimit(60);
+	m_rManager.loadFont("times", "./times.ttf");
 	gameView.setSize(sf::Vector2f(20 * tileSize, 15 * tileSize));
 	gameView.setCenter(sf::Vector2f((20 * tileSize) / 2, (15 * tileSize) / 2));
 	//float sideWidth = windowWidth - windowHeight;
@@ -15,16 +17,17 @@ Game::Game()
 	gameWindowWidth = (20 * tileSize) / windowWidth;
 	sideBarX = windowWidth * gameWindowWidth;
 	//sideView.setViewport(sf::FloatRect(gameWindowWidth, 1.0f, windowWidth - gameWindowWidth, 1.0f));
-	turnButton = Button(sf::Vector2f(sideBarX + 50, 300), sf::Vector2f(100, 100), m_font, "End Turn");
 	gameView.setViewport(sf::FloatRect(0.0f, 0.0f, gameWindowWidth, 1.0f));
 	backView.setSize(windowWidth, windowHeight);
 	backView.setCenter(windowWidth / 2, windowHeight / 2);
 	backView.setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f));
-	if (!m_font.loadFromFile("./times.ttf"))
-	{
-		std::string s("Error loading font");
-		throw std::exception(s.c_str());
-	}
+	//if (!m_font.loadFromFile("./times.ttf"))
+	//{
+	//	std::string s("Error loading font");
+	//	throw std::exception(s.c_str());
+	//}
+	m_font = m_rManager.getFont("times");
+	turnButton = Button(sf::Vector2f(sideBarX + 50, 300), sf::Vector2f(100, 100), m_font, "End Turn");
 	std::string pText = "Player: " + std::to_string(static_cast<int>(playerTurn));
 	currentTurn = sf::Text(pText, m_font, 30);
 	currentTurn.setPosition((sideBarX) + 50, 50);
@@ -117,7 +120,7 @@ void Game::processEvents()
 		{
 			if (event.key.code == sf::Keyboard::F)
 			{
-				m_map.fButton(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
+				m_map.fButton(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)), m_rManager);
 			}
 			if (event.key.code == sf::Keyboard::Right)
 			{

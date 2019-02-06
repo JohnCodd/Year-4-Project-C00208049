@@ -4,6 +4,7 @@ Map::Map()
 {
 	sizeX = 10;
 	sizeY = 10;
+
 	if (!tileset.loadFromFile("./Resources/Tilesets/tileset.png"))
 	{
 		std::string s("Error loading texture");
@@ -13,33 +14,37 @@ Map::Map()
 	{
 		for (int j = 1; j < sizeX; j++)
 		{
-			Plains p = Plains();
+			Plains p = Plains(sf::Vector2f(j,i), tileset, highlightBorder, enemyBorder, tileSize);
 			//sf::RectangleShape texture;
 			//texture.setTexture(&tileset);
 			//texture.setSize(sf::Vector2f(16, 16));
 			//texture.setTextureRect(sf::IntRect(16, 16, 16, 16));
 			//p.setTexture(&texture);
-			tiles[sf::Vector2f(j,i)] = p;
+			tiles[sf::Vector2f(j, i)] = p;
 		}
 	}
 }
 
-Map::Map(int x, int y, int tSize, int& turn)
+Map::Map(int x, int y, int tSize, int& turn, ResourceManager& rm)
 {
 	sizeX = x;
 	sizeY = y;
 	tileSize = tSize;
 	playerTurn = &turn;
+	rm.loadTexture("tileset", "./Resources/Tilesets/tileset.png");
+	rm.loadTexture("spritesheet", "./Resources/Sprite Sheets/Unit Spritesheet.png");
+	rm.loadTexture("highlightBorder", "./Resources/Tilesets/BorderHighlight.png");
+	rm.loadTexture("enemyBorder", "./Resources/Tilesets/EnemyHighlight.png");
 	if (!tileset.loadFromFile("./Resources/Tilesets/tileset.png"))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
-	if (!spritesheet.loadFromFile("./Resources/Sprite Sheets/Unit Spritesheet.png"))
-	{
-		std::string s("Error loading texture");
-		throw std::exception(s.c_str());
-	}
+	//if (!spritesheet.loadFromFile("./Resources/Sprite Sheets/Unit Spritesheet.png"))
+	//{
+	//	std::string s("Error loading texture");
+	//	throw std::exception(s.c_str());
+	//}
 	if (!highlightBorder.loadFromFile("./Resources/Tilesets/BorderHighlight.png"))
 	{
 		std::string s("Error loading texture");
@@ -54,7 +59,7 @@ Map::Map(int x, int y, int tSize, int& turn)
 	{
 		for (int j = 0; j < sizeX; j++)
 		{
-			Plains p = Plains();
+			Plains p = Plains(sf::Vector2f(j, i), rm.getTexture("tileset"), highlightBorder, enemyBorder, tileSize);
 			p.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
 			tiles[sf::Vector2f(j,i)] = p;
 			sf::Vector2f location = sf::Vector2f(j, i);
@@ -82,87 +87,92 @@ Map::Map(int x, int y, int tSize, int& turn)
 		}
 	}
 	sf::Vector2f location = sf::Vector2f(10, 6);
-	tiles[location].setUnit(new Tank(location, 1));
+	tiles[location].setUnit(new Tank(location, 1, rm.getTexture("spritesheet"), tileSize));
 	location = sf::Vector2f(6, 10);
-	tiles[location].setUnit(new Tank(location, 2));
+	tiles[location].setUnit(new Tank(location, 2, rm.getTexture("spritesheet"), tileSize));
 	location = sf::Vector2f(4, 10);
-	tiles[location].setUnit(new Tank(location, 1));
+	tiles[location].setUnit(new Tank(location, 1, rm.getTexture("spritesheet"), tileSize));
 }
 
 void Map::render(sf::RenderWindow & window, float tileSize)
 {
 	for (auto &t : tiles)
 	{
-		std::string tileType = t.second.getType();
-		sf::RectangleShape tileTexture;
-		tileTexture.setTexture(&tileset);
-		if (tileType == "Plains")
-		{
-			tileTexture.setTextureRect(sf::IntRect(16, 0, 16, 16));
-		}
-		else if (tileType == "Forest")
-		{
-			tileTexture.setTextureRect(sf::IntRect(96, 64, 16, 16));
-		}
-		else
-		{
-			tileTexture.setFillColor(sf::Color::Transparent);
-		}
-		tileTexture.setPosition(t.first.x * tileSize, t.first.y * tileSize);
-		tileTexture.setSize(sf::Vector2f(tileSize, tileSize));
-		sf::RectangleShape highlight;
-		if (t.second.getHighlighted() == true)
-		{
-			highlight.setTexture(&highlightBorder);
-			highlight.setPosition(t.first.x * tileSize, t.first.y * tileSize);
-			highlight.setSize(sf::Vector2f(tileSize, tileSize));
-			//highlight.setFillColor(sf::Color(18, 209, 226, 120));
-		}
-		else if (t.second.getEnemy() == true)
-		{
-			highlight.setTexture(&enemyBorder);
-			highlight.setPosition(t.first.x * tileSize, t.first.y * tileSize);
-			highlight.setSize(sf::Vector2f(tileSize, tileSize));
-		}
-		else
-		{
-			tileTexture.setOutlineThickness(0);
-		}
-		std::string unitType;
-		sf::RectangleShape unitTexture;
-		int player;
-		if (t.second.getUnit() != nullptr)
-		{
-			unitType = t.second.getUnit()->getType();
-			player = t.second.getUnit()->getOwner();
-			if (player == 1)
-			{
-				unitTexture.setFillColor(sf::Color(100, 100, 255));
-			}
-			else if (player == 2)
-			{
-				unitTexture.setFillColor(sf::Color(255, 100, 100));
-			}
-		}
-		unitTexture.setTexture(&spritesheet);
-		if (unitType == "Tank")
-		{
-			unitTexture.setTextureRect(sf::IntRect(48, 2, 24, 24));
-		}
-		else
-		{
-			unitTexture.setFillColor(sf::Color::Transparent);
-		}
-		sf::Vector2f unitLocation;
+		//std::string tileType = t.second.getType();
+		//sf::RectangleShape tileTexture;
+		//tileTexture.setTexture(&tileset);
+		//if (tileType == "Plains")
+		//{
+		//	tileTexture.setTextureRect(sf::IntRect(16, 0, 16, 16));
+		//}
+		//else if (tileType == "Forest")
+		//{
+		//	tileTexture.setTextureRect(sf::IntRect(96, 64, 16, 16));
+		//}
+		//else
+		//{
+		//	tileTexture.setFillColor(sf::Color::Transparent);
+		//}
+		//tileTexture.setPosition(t.first.x * tileSize, t.first.y * tileSize);
+		//tileTexture.setSize(sf::Vector2f(tileSize, tileSize));
+		//sf::RectangleShape highlight;
+		//if (t.second.getHighlighted() == true)
+		//{
+		//	highlight.setTexture(&highlightBorder);
+		//	highlight.setPosition(t.first.x * tileSize, t.first.y * tileSize);
+		//	highlight.setSize(sf::Vector2f(tileSize, tileSize));
+		//	//highlight.setFillColor(sf::Color(18, 209, 226, 120));
+		//}
+		//else if (t.second.getEnemy() == true)
+		//{
+		//	highlight.setTexture(&enemyBorder);
+		//	highlight.setPosition(t.first.x * tileSize, t.first.y * tileSize);
+		//	highlight.setSize(sf::Vector2f(tileSize, tileSize));
+		//}
+		//else
+		//{
+		//	tileTexture.setOutlineThickness(0);
+		//}
+		//std::string unitType;
+		//sf::RectangleShape unitTexture;
+		//int player;
+		//if (t.second.getUnit() != nullptr)
+		//{
+		//	unitType = t.second.getUnit()->getType();
+		//	player = t.second.getUnit()->getOwner();
+		//	if (player == 1)
+		//	{
+		//		unitTexture.setFillColor(sf::Color(100, 100, 255));
+		//	}
+		//	else if (player == 2)
+		//	{
+		//		unitTexture.setFillColor(sf::Color(255, 100, 100));
+		//	}
+		//}
+		//unitTexture.setTexture(&spritesheet);
+		//if (unitType == "Tank")
+		//{
+		//	unitTexture.setTextureRect(sf::IntRect(48, 2, 24, 24));
+		//}
+		//else
+		//{
+		//	unitTexture.setFillColor(sf::Color::Transparent);
+		//}
+		//sf::Vector2f unitLocation;
+		//if (t.second.getUnit())
+		//{
+		//	unitLocation = t.second.getUnit()->getLocation();
+		//}
+		//unitTexture.setPosition((unitLocation.x) * tileSize, (unitLocation.y) * tileSize);
+		//unitTexture.setSize(sf::Vector2f(tileSize, tileSize));
+		//window.draw(tileTexture);
+		//window.draw(highlight);
+		t.second.render(window);
 		if (t.second.getUnit())
 		{
-			unitLocation = t.second.getUnit()->getLocation();
+			t.second.getUnit()->render(window);
 		}
-		unitTexture.setPosition((unitLocation.x) * tileSize, (unitLocation.y) * tileSize);
-		unitTexture.setSize(sf::Vector2f(tileSize, tileSize));
-		window.draw(tileTexture);
-		window.draw(highlight);
-		window.draw(unitTexture);
+		//window.draw(unitTexture);
 		
 	}
 }
@@ -401,12 +411,12 @@ bool Map::checkTile(sf::Vector2f v)
 	}
 }
 
-void Map::fButton(sf::Vector2f v)
+void Map::fButton(sf::Vector2f v, ResourceManager& rm)
 {
 	sf::Vector2f mousePosition = convertToKey(v);
 	sf::Vector2f tileLocation;
 	bool tileFound = false;
-	Tile* targetTile = new Tile();
+	Tile* targetTile = nullptr;
 	for (auto &t : tiles)
 	{
 		if (t.second.getRect().intersects(sf::FloatRect(v.x, v.y, 2, 2)))
@@ -418,7 +428,7 @@ void Map::fButton(sf::Vector2f v)
 	}
 	if (tileFound)
 	{
-		Forest f = Forest();
+		Forest f = Forest(tileLocation, rm.getTexture("tileset"), highlightBorder, enemyBorder, tileSize);
 		for (auto pair : targetTile->getAdj())
 		{
 			auto &p = pair.first;

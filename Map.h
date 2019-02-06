@@ -3,6 +3,7 @@
 #include "Forest.h"
 #include "Tank.h"
 #include <map>
+#include "ResourceManager.h"
 struct VectorComparator
 {
 	bool operator() (sf::Vector2f lhs, sf::Vector2f rhs) const
@@ -14,12 +15,12 @@ class Map
 {
 public:
 	Map();
-	Map(int sizeX, int sizeY, int tSize, int& turn);
+	Map(int sizeX, int sizeY, int tSize, int& turn, ResourceManager& rm);
 	~Map() {};
 	void render(sf::RenderWindow & window, float tileSize);
 	void leftclickMap(sf::Vector2f e);
 	void rightclick(sf::Event e);
-	void fButton(sf::Vector2f v);
+	void fButton(sf::Vector2f v, ResourceManager& rm);
 	void expandtile(sf::Vector2f location, int moves);
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();

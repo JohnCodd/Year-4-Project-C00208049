@@ -46,12 +46,18 @@ public:
 	{
 		health -= d;
 	}
+
+	virtual void render(sf::RenderWindow& window) {
+		sprite.setPosition((gridLocation.x) * tileSize, (gridLocation.y) * tileSize);
+		window.draw(sprite);
+	}
 protected:
-	int health, maxHealth;
+	int health, maxHealth, tileSize;
 	int power;
 	int movement;
 	int player;
 	bool turnTaken;
 	std::string type;
 	sf::Vector2f gridLocation;
+	sf::RectangleShape sprite;
 };

@@ -4,6 +4,7 @@
 #include <string>
 #include "Map.h"
 #include "Button.h"
+#include "ResourceManager.h"
 
 class Game
 {
@@ -23,6 +24,8 @@ protected:
 	int playerTurn = 1;
 	int maxPlayers = 2;
 	sf::RenderWindow m_window;
+	ResourceManager m_rManager;
+	Map m_map;
 	sf::View gameView, backView, sideView;
 	sf::Font m_font;
 	sf::Text currentTurn, unitHealth, unitMoves, terrainDefense, terrainCost;
@@ -30,6 +33,5 @@ protected:
 	bool tileHighlighted = false;
 	float gameWindowWidth;
 	float sideBarX;
-	Map m_map;
 	Button turnButton;
 };
