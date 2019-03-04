@@ -19,6 +19,9 @@
     <Filter Include="Header Files\Units">
       <UniqueIdentifier>{eec94141-dab0-47d3-b3a0-62e580add7dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Move Charts">
+      <UniqueIdentifier>{a199d8c2-b25e-4413-a39a-5603159dfa6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -64,6 +67,12 @@
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMoveChart.h">
+      <Filter>Header Files\Move Charts</Filter>
+    </ClInclude>
+    <ClInclude Include="TankMoveChart.h">
+      <Filter>Header Files\Move Charts</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

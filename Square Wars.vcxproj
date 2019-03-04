@@ -130,6 +130,7 @@
     <ClCompile Include="ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseMoveChart.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Forest.h" />
     <ClInclude Include="Game.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Plains.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Tank.h" />
+    <ClInclude Include="TankMoveChart.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Unit.h" />
   </ItemGroup>

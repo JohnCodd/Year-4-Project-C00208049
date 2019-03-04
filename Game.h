@@ -26,7 +26,7 @@ protected:
 	sf::RenderWindow m_window;
 	ResourceManager m_rManager;
 	Map m_map;
-	sf::View gameView, backView, sideView;
+	sf::View gameView, backView;
 	sf::Font m_font;
 	sf::Text currentTurn, unitHealth, unitMoves, terrainDefense, terrainCost;
 	bool unitHighlighted = false;
