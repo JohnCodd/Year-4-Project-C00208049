@@ -210,9 +210,28 @@ void Map::leftclickMap(sf::Vector2f v)
 			{
 				Unit* targetUnit = tiles[tileLocation].getUnit();
 				Tile* closest = getClosest(tiles[tileLocation]);
+				//Damage the units
 				targetUnit->damage(selectedUnit->getPower() + 10 - targetTile->getDefense());
-				selectedUnit->damage(targetUnit->getPower() - closest->getDefense());
-				if (&tiles[selectedUnit->getLocation()] != closest)
+				if (targetUnit->getHealth() <= 0)
+				{
+					targetUnit = nullptr;
+				}
+				if (targetUnit)
+				{
+					selectedUnit->damage(targetUnit->getPower() - closest->getDefense());
+					if (selectedUnit->getHealth() <= 0)
+					{
+						selectedUnit = nullptr;
+					}
+				}
+				else
+				{
+					Unit movingUnit = *selectedUnit;
+					movingUnit.setLocation(tileLocation);
+					tiles[tileLocation].setUnit(new Unit(movingUnit));
+					tiles[selectedUnit->getLocation()].setUnit(nullptr);
+				}
+				if (&tiles[selectedUnit->getLocation()] != closest && targetUnit)
 				{
 					Unit movingUnit = *selectedUnit;
 					//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
