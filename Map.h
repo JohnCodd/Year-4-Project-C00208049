@@ -1,6 +1,6 @@
 #pragma once
 #include "Tile.h"
-#include "Tank.h"
+#include "Unit.h"
 #include <map>
 #include "ResourceManager.h"
 struct VectorComparator
@@ -20,7 +20,6 @@ public:
 	void leftclickMap(sf::Vector2f e);
 	void rightclick(sf::Event e);
 	void fButton(sf::Vector2f v, ResourceManager& rm);
-	void expandtile(sf::Vector2f location, int moves);
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();
 	bool checkRange(Tile& tile);

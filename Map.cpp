@@ -1,6 +1,12 @@
 #include "Map.h"
+
+// Tiles
 #include "Plains.h"
 #include "Forest.h"
+
+// Units
+#include "Tank.h"
+#include "Bomber.h"
 
 Map::Map()
 {
@@ -94,88 +100,19 @@ Map::Map(int x, int y, int tSize, int& turn, ResourceManager& rm)
 	tiles[location].setUnit(new Tank(location, 2, rm.getTexture("spritesheet"), tileSize));
 	location = sf::Vector2f(4, 10);
 	tiles[location].setUnit(new Tank(location, 1, rm.getTexture("spritesheet"), tileSize));
+	location = sf::Vector2f(5, 5);
+	tiles[location].setUnit(new Bomber(location, 1, rm.getTexture("spritesheet"), tileSize));
 }
 
 void Map::render(sf::RenderWindow & window, float tileSize)
 {
 	for (auto &t : tiles)
 	{
-		//std::string tileType = t.second.getType();
-		//sf::RectangleShape tileTexture;
-		//tileTexture.setTexture(&tileset);
-		//if (tileType == "Plains")
-		//{
-		//	tileTexture.setTextureRect(sf::IntRect(16, 0, 16, 16));
-		//}
-		//else if (tileType == "Forest")
-		//{
-		//	tileTexture.setTextureRect(sf::IntRect(96, 64, 16, 16));
-		//}
-		//else
-		//{
-		//	tileTexture.setFillColor(sf::Color::Transparent);
-		//}
-		//tileTexture.setPosition(t.first.x * tileSize, t.first.y * tileSize);
-		//tileTexture.setSize(sf::Vector2f(tileSize, tileSize));
-		//sf::RectangleShape highlight;
-		//if (t.second.getHighlighted() == true)
-		//{
-		//	highlight.setTexture(&highlightBorder);
-		//	highlight.setPosition(t.first.x * tileSize, t.first.y * tileSize);
-		//	highlight.setSize(sf::Vector2f(tileSize, tileSize));
-		//	//highlight.setFillColor(sf::Color(18, 209, 226, 120));
-		//}
-		//else if (t.second.getEnemy() == true)
-		//{
-		//	highlight.setTexture(&enemyBorder);
-		//	highlight.setPosition(t.first.x * tileSize, t.first.y * tileSize);
-		//	highlight.setSize(sf::Vector2f(tileSize, tileSize));
-		//}
-		//else
-		//{
-		//	tileTexture.setOutlineThickness(0);
-		//}
-		//std::string unitType;
-		//sf::RectangleShape unitTexture;
-		//int player;
-		//if (t.second.getUnit() != nullptr)
-		//{
-		//	unitType = t.second.getUnit()->getType();
-		//	player = t.second.getUnit()->getOwner();
-		//	if (player == 1)
-		//	{
-		//		unitTexture.setFillColor(sf::Color(100, 100, 255));
-		//	}
-		//	else if (player == 2)
-		//	{
-		//		unitTexture.setFillColor(sf::Color(255, 100, 100));
-		//	}
-		//}
-		//unitTexture.setTexture(&spritesheet);
-		//if (unitType == "Tank")
-		//{
-		//	unitTexture.setTextureRect(sf::IntRect(48, 2, 24, 24));
-		//}
-		//else
-		//{
-		//	unitTexture.setFillColor(sf::Color::Transparent);
-		//}
-		//sf::Vector2f unitLocation;
-		//if (t.second.getUnit())
-		//{
-		//	unitLocation = t.second.getUnit()->getLocation();
-		//}
-		//unitTexture.setPosition((unitLocation.x) * tileSize, (unitLocation.y) * tileSize);
-		//unitTexture.setSize(sf::Vector2f(tileSize, tileSize));
-		//window.draw(tileTexture);
-		//window.draw(highlight);
 		t.second.render(window);
 		if (t.second.getUnit())
 		{
 			t.second.getUnit()->render(window);
-		}
-		//window.draw(unitTexture);
-		
+		}		
 	}
 }
 
@@ -265,56 +202,6 @@ void Map::rightclick(sf::Event e)
 {
 	selectedUnit = nullptr;
 	clearTiles();
-}
-
-void Map::expandtile(sf::Vector2f location, int moves)
-{
-	// Legacy code
-	sf::Vector2f tileLocation;
-	int movesremaining;
-	sf::Vector2f newLocation;
-	tileLocation = sf::Vector2f(location.x, location.y);
-	tiles[tileLocation].setHighlight(true);
-	tileLocation = sf::Vector2f(location.x - 1, location.y);
-	if (tiles.count(tileLocation) == 1)
-	{
-		movesremaining = moves - tiles[tileLocation].getCost();
-		if (movesremaining >= 0)
-		{
-			newLocation = sf::Vector2f(location.x - 1, location.y);
-			expandtile(newLocation, movesremaining);
-		}
-	}
-	tileLocation = sf::Vector2f(location.x + 1, location.y);
-	if (tiles.count(tileLocation) == 1)
-	{
-		movesremaining = moves - tiles[tileLocation].getCost();
-		if (movesremaining >= 0)
-		{
-			newLocation = sf::Vector2f(location.x + 1, location.y);
-			expandtile(newLocation, movesremaining);
-		}
-	}
-	tileLocation = sf::Vector2f(location.x, location.y - 1);
-	if (tiles.count(tileLocation) == 1)
-	{
-		movesremaining = moves - tiles[tileLocation].getCost();
-		if (movesremaining >= 0)
-		{
-			newLocation = sf::Vector2f(location.x, location.y - 1);
-			expandtile(newLocation, movesremaining);
-		}
-	}
-	tileLocation = sf::Vector2f(location.x, location.y + 1);
-	if (tiles.count(tileLocation) == 1)
-	{
-		movesremaining = moves - tiles[tileLocation].getCost();
-		if (movesremaining >= 0)
-		{
-			newLocation = sf::Vector2f(location.x, location.y + 1);
-			expandtile(newLocation, movesremaining);
-		}
-	}
 }
 
 void Map::moveSearch(Tile& start, int moves)
