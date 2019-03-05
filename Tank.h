@@ -1,39 +1,41 @@
 #pragma once
 #include "Unit.h"
+#include "TankMoveChart.h"
 
 class Tank : public Unit
 {
 public:
 	Tank()
 	{
-		maxHealth = 100;
-		health = maxHealth;
-		power = 50;
-		movement = 6;
+		m_maxHealth = 100;
+		m_health = m_maxHealth;
+		m_power = 50;
+		m_movement = 6;
 		type = "Tank";
-		gridLocation = sf::Vector2f(1, 1);
+		m_gridLocation = sf::Vector2f(1, 1);
 	};
 	Tank(sf::Vector2f location, int p, sf::Texture& tileset, int tSize)
 	{
-		maxHealth = 100;
-		health = maxHealth;
-		power = 50;
-		movement = 6;
+		m_maxHealth = 100;
+		m_health = m_maxHealth;
+		m_power = 50;
+		m_movement = 6;
 		type = "Tank";
-		gridLocation = location;
-		player = p;
-		tileSize = tSize;
-		sprite.setTexture(&tileset);
-		sprite.setTextureRect(sf::IntRect(48, 2, 24, 24));
-		if (player == 1)
+		m_gridLocation = location;
+		m_player = p;
+		m_tileSize = tSize;
+		m_sprite.setTexture(&tileset);
+		m_sprite.setTextureRect(sf::IntRect(48, 2, 24, 24));
+		if (m_player == 1)
 		{
-			sprite.setFillColor(sf::Color(100, 100, 255));
+			m_sprite.setFillColor(sf::Color(100, 100, 255));
 		}
-		else if (player == 2)
+		else if (m_player == 2)
 		{
-			sprite.setFillColor(sf::Color(255, 100, 100));
+			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
-		sprite.setSize(sf::Vector2f(tileSize, tileSize));
+		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
+		m_chart = TankMoveChart();
 	};
 	~Tank() {};
 };

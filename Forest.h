@@ -8,7 +8,7 @@ public:
 	{
 		moveCost = 3;
 		defense = 10;
-		type = "Forest";
+		type = TileTypes::Forest;
 		sprite.setTextureRect(sf::IntRect(96, 64, 16, 16));
 	};
 	~Forest() {};

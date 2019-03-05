@@ -8,7 +8,7 @@ public:
 	{
 		moveCost = 1;
 		defense = 0;
-		type = "Plains";
+		type = TileTypes::Plains;
 		sprite.setTextureRect(sf::IntRect(16, 0, 16, 16));
 	};
 	~Plains() {};

@@ -1,11 +1,12 @@
 #pragma once
 #include "BaseMoveChart.h"
 
-class TankMoveChart : protected BaseMoveChart
+class TankMoveChart : public BaseMoveChart
 {
 public:
 	TankMoveChart() 
 	{
-		//m_chart[Plains] = 1;
+		m_chart[TileTypes::Plains] = 1;
+		m_chart[TileTypes::Forest] = 3;
 	};
 };

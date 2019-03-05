@@ -1,6 +1,5 @@
 #pragma once
-#include "Plains.h"
-#include "Forest.h"
+#include "Tile.h"
 #include "Tank.h"
 #include <map>
 #include "ResourceManager.h"

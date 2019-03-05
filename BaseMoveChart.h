@@ -1,14 +1,13 @@
 #pragma once
 #include <iostream>
 #include <map>
-#include "Forest.h"
-#include "Plains.h"
+#include "TileTypes.h"
 
 class BaseMoveChart
 {
 public:
 	BaseMoveChart() {};
 	~BaseMoveChart() {};
-	virtual int const getCost(Tile t) { return m_chart[t]; }
-	std::map<Tile, int> m_chart;
+	virtual int getCost(TileTypes t) { return m_chart[t]; }
+	std::map<TileTypes, int> m_chart;
 };

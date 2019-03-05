@@ -1,4 +1,6 @@
 #include "Map.h"
+#include "Plains.h"
+#include "Forest.h"
 
 Map::Map()
 {
@@ -338,7 +340,7 @@ void Map::moveSearch(Tile& start, int moves)
 			{
 				std::cout << "Test" << std::endl;
 			}
-			int movesRemaining = queue.front()->getSCost() - e->getCost();
+			int movesRemaining = queue.front()->getSCost() - start.getUnit()->getChartCost(e->getType());
 			if (movesRemaining >= 0)
 			{
 				if (movesRemaining > e->getSCost())
