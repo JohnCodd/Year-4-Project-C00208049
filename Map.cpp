@@ -3,6 +3,7 @@
 // Tiles
 #include "Plains.h"
 #include "Forest.h"
+#include "Sea.h"
 
 // Units
 #include "Tank.h"
@@ -14,6 +15,21 @@ Map::Map()
 	sizeY = 10;
 
 	if (!tileset.loadFromFile("./Resources/Tilesets/tileset.png"))
+	{
+		std::string s("Error loading texture");
+		throw std::exception(s.c_str());
+	}
+	if (!spritesheet.loadFromFile("./Resources/Sprite Sheets/Unit Spritesheet.png"))
+	{
+		std::string s("Error loading texture");
+		throw std::exception(s.c_str());
+	}
+	if (!highlightBorder.loadFromFile("./Resources/Tilesets/BorderHighlight.png"))
+	{
+		std::string s("Error loading texture");
+		throw std::exception(s.c_str());
+	}
+	if (!enemyBorder.loadFromFile("./Resources/Tilesets/EnemyHighlight.png"))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
@@ -53,23 +69,32 @@ Map::Map(int x, int y, int tSize, int& turn, ResourceManager& rm)
 	//	std::string s("Error loading texture");
 	//	throw std::exception(s.c_str());
 	//}
-	if (!highlightBorder.loadFromFile("./Resources/Tilesets/BorderHighlight.png"))
-	{
-		std::string s("Error loading texture");
-		throw std::exception(s.c_str());
-	}
-	if (!enemyBorder.loadFromFile("./Resources/Tilesets/EnemyHighlight.png"))
-	{
-		std::string s("Error loading texture");
-		throw std::exception(s.c_str());
-	}
+	//if (!highlightBorder.loadFromFile("./Resources/Tilesets/BorderHighlight.png"))
+	//{
+	//	std::string s("Error loading texture");
+	//	throw std::exception(s.c_str());
+	//}
+	//if (!enemyBorder.loadFromFile("./Resources/Tilesets/EnemyHighlight.png"))
+	//{
+	//	std::string s("Error loading texture");
+	//	throw std::exception(s.c_str());
+	//}
 	for (int i = 0; i < sizeY; i++)
 	{
 		for (int j = 0; j < sizeX; j++)
 		{
-			Plains p = Plains(sf::Vector2f(j, i), rm.getTexture("tileset"), highlightBorder, enemyBorder, tileSize);
-			p.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
-			tiles[sf::Vector2f(j,i)] = p;
+			if (i < 12)
+			{
+				Plains p = Plains(sf::Vector2f(j, i), rm.getTexture("tileset"), rm.getTexture("highlightBorder"), rm.getTexture("enemyBorder"), tileSize);
+				p.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
+				tiles[sf::Vector2f(j, i)] = p;
+			}
+			else
+			{
+				Sea s = Sea(sf::Vector2f(j, i), rm.getTexture("tileset"), rm.getTexture("highlightBorder"), rm.getTexture("enemyBorder"), tileSize);
+				s.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
+				tiles[sf::Vector2f(j, i)] = s;
+			}
 			sf::Vector2f location = sf::Vector2f(j, i);
 			sf::Vector2f newLocation;
 			if (i > 0)
@@ -336,7 +361,7 @@ void Map::fButton(sf::Vector2f v, ResourceManager& rm)
 	}
 	if (tileFound)
 	{
-		Forest f = Forest(tileLocation, rm.getTexture("tileset"), highlightBorder, enemyBorder, tileSize);
+		Forest f = Forest(tileLocation, rm.getTexture("tileset"), rm.getTexture("highlightBorder"), rm.getTexture("enemyBorder"), tileSize);
 		for (auto pair : targetTile->getAdj())
 		{
 			auto &p = pair.first;

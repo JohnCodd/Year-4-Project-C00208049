@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <map>
+#include <optional>
 #include "TileTypes.h"
 
 class BaseMoveChart
@@ -8,6 +9,17 @@ class BaseMoveChart
 public:
 	BaseMoveChart() {};
 	~BaseMoveChart() {};
-	virtual int getCost(TileTypes t) { return m_chart[t]; }
-	std::map<TileTypes, int> m_chart;
+	virtual int getCost(TileTypes t) 
+	{
+		if (m_chart[t].has_value())
+		{
+			return m_chart[t].value();
+		}
+		else
+		{
+			return 99;
+		}
+	}
+
+	std::map<TileTypes, std::optional<int>> m_chart;
 };

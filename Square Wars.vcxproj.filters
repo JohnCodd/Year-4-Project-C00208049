@@ -83,8 +83,11 @@
     <ClInclude Include="UnitTypes.h">
       <Filter>Header Files\Units</Filter>
     </ClInclude>
-    <ClInclude Include="BomberMoveChart.h">
+    <ClInclude Include="AirMoveChart.h">
       <Filter>Header Files\Move Charts</Filter>
+    </ClInclude>
+    <ClInclude Include="Sea.h">
+      <Filter>Header Files\Map Tiles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,5 +3,6 @@ enum class TileTypes
 {
 	Empty,
 	Plains,
-	Forest
+	Forest,
+	Sea
 };

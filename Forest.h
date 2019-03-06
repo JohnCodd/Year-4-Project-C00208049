@@ -6,10 +6,10 @@ public:
 	Forest(sf::Vector2f location, sf::Texture& tileset, sf::Texture& hBlue, sf::Texture& hRed, int tSize)
 		: Tile(location, tileset, hRed, hBlue, tSize)
 	{
-		moveCost = 3;
-		defense = 10;
-		type = TileTypes::Forest;
-		sprite.setTextureRect(sf::IntRect(96, 64, 16, 16));
+		m_moveCost = 3;
+		m_defense = 10;
+		m_type = TileTypes::Forest;
+		m_sprite.setTextureRect(sf::IntRect(96, 64, 16, 16));
 	};
 	~Forest() {};
 };

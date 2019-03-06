@@ -134,13 +134,14 @@
   <ItemGroup>
     <ClInclude Include="BaseMoveChart.h" />
     <ClInclude Include="Bomber.h" />
-    <ClInclude Include="BomberMoveChart.h" />
+    <ClInclude Include="AirMoveChart.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Forest.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Plains.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Sea.h" />
     <ClInclude Include="Tank.h" />
     <ClInclude Include="TankMoveChart.h" />
     <ClInclude Include="Tile.h" />

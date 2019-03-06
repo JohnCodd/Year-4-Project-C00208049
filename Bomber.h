@@ -1,6 +1,6 @@
 #pragma once
 #include "Unit.h"
-#include "BomberMoveChart.h"
+#include "AirMoveChart.h"
 
 class Bomber : public Unit
 {
@@ -35,6 +35,6 @@ public:
 			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
 		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
-		m_chart = BomberMoveChart();
+		m_chart = AirMoveChart();
 	};
 };
