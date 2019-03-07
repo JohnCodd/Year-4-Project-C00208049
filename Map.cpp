@@ -1,4 +1,6 @@
 #include "Map.h"
+#include "Libraries/nlohmann/json.hpp"
+#include <fstream>
 
 // Tiles
 #include "Plains.h"
@@ -8,6 +10,7 @@
 // Units
 #include "Tank.h"
 #include "Bomber.h"
+
 
 Map::Map()
 {
@@ -55,10 +58,11 @@ Map::Map(int x, int y, int tSize, int& turn, ResourceManager& rm)
 	sizeY = y;
 	tileSize = tSize;
 	playerTurn = &turn;
-	rm.loadTexture("tileset", "./Resources/Tilesets/tileset.png");
-	rm.loadTexture("spritesheet", "./Resources/Sprite Sheets/Unit Spritesheet.png");
-	rm.loadTexture("highlightBorder", "./Resources/Tilesets/BorderHighlight.png");
-	rm.loadTexture("enemyBorder", "./Resources/Tilesets/EnemyHighlight.png");
+	m_resourceManager = &rm;
+	m_resourceManager->loadTexture("tileset", "./Resources/Tilesets/tileset.png");
+	m_resourceManager->loadTexture("spritesheet", "./Resources/Sprite Sheets/Unit Spritesheet.png");
+	m_resourceManager->loadTexture("highlightBorder", "./Resources/Tilesets/BorderHighlight.png");
+	m_resourceManager->loadTexture("enemyBorder", "./Resources/Tilesets/EnemyHighlight.png");
 	if (!tileset.loadFromFile("./Resources/Tilesets/tileset.png"))
 	{
 		std::string s("Error loading texture");
@@ -85,13 +89,13 @@ Map::Map(int x, int y, int tSize, int& turn, ResourceManager& rm)
 		{
 			if (i < 12)
 			{
-				Plains p = Plains(sf::Vector2f(j, i), rm.getTexture("tileset"), rm.getTexture("highlightBorder"), rm.getTexture("enemyBorder"), tileSize);
+				Plains p = Plains(sf::Vector2f(j, i), m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
 				p.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
 				tiles[sf::Vector2f(j, i)] = p;
 			}
 			else
 			{
-				Sea s = Sea(sf::Vector2f(j, i), rm.getTexture("tileset"), rm.getTexture("highlightBorder"), rm.getTexture("enemyBorder"), tileSize);
+				Sea s = Sea(sf::Vector2f(j, i), m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
 				s.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
 				tiles[sf::Vector2f(j, i)] = s;
 			}
@@ -120,13 +124,90 @@ Map::Map(int x, int y, int tSize, int& turn, ResourceManager& rm)
 		}
 	}
 	sf::Vector2f location = sf::Vector2f(10, 6);
-	tiles[location].setUnit(new Tank(location, 1, rm.getTexture("spritesheet"), tileSize));
+	tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
 	location = sf::Vector2f(6, 10);
-	tiles[location].setUnit(new Tank(location, 2, rm.getTexture("spritesheet"), tileSize));
+	tiles[location].setUnit(new Tank(location, 2, m_resourceManager->getTexture("spritesheet"), tileSize));
 	location = sf::Vector2f(4, 10);
-	tiles[location].setUnit(new Tank(location, 1, rm.getTexture("spritesheet"), tileSize));
+	tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
 	location = sf::Vector2f(5, 5);
-	tiles[location].setUnit(new Bomber(location, 1, rm.getTexture("spritesheet"), tileSize));
+	tiles[location].setUnit(new Bomber(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
+}
+
+Map::Map(int tSize, int& turn, ResourceManager& rm)
+{
+	tileSize = tSize;
+	playerTurn = &turn;
+	m_resourceManager = &rm;
+}
+
+void Map::loadMap(std::string levelFilePath)
+{
+	std::ifstream i(levelFilePath);
+	js::json file;
+	i >> file;
+	std::cout << file << std::endl;
+	auto mapSize = file["Map Size"];
+	sizeX = mapSize[0];
+	sizeY = mapSize[1];
+	m_resourceManager->loadTexture("tileset", "./Resources/Tilesets/tileset.png");
+	m_resourceManager->loadTexture("spritesheet", "./Resources/Sprite Sheets/Unit Spritesheet.png");
+	m_resourceManager->loadTexture("highlightBorder", "./Resources/Tilesets/BorderHighlight.png");
+	m_resourceManager->loadTexture("enemyBorder", "./Resources/Tilesets/EnemyHighlight.png");
+	for (int i = 0; i < sizeY; i++)
+	{
+		for (int j = 0; j < sizeX; j++)
+		{
+			Plains p = Plains(sf::Vector2f(j, i), m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
+			p.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
+			tiles[sf::Vector2f(j, i)] = p;
+			sf::Vector2f location;
+			int t = 0;
+			int fTiles = 0;
+			while (!file["Tiles"][t].is_null())
+			{
+				while (!file["Tiles"][t]["Forest"][fTiles].is_null())
+				{
+					auto position = file["Tiles"][t]["Forest"][fTiles]["Position"];
+					location = sf::Vector2f(position[0], position[1]);
+					Forest f = Forest(location, m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
+					f.setRect(sf::FloatRect(location.x * tileSize, location.y * tileSize, tileSize, tileSize));
+					tiles[location] = f;
+					fTiles++;
+				}
+				t++;
+			}
+			location = sf::Vector2f(j, i);
+			sf::Vector2f newLocation;
+			if (i > 0)
+			{
+				newLocation = sf::Vector2f(j, i - 1);
+				tiles[location].addEdge(newLocation, tiles[newLocation]);
+			}
+			if (j + 1 < sizeX)
+			{
+				newLocation = sf::Vector2f(j + 1, i);
+				tiles[location].addEdge(newLocation, tiles[newLocation]);
+			}
+			if (i + 1 < sizeY)
+			{
+				newLocation = sf::Vector2f(j, i + 1);
+				tiles[location].addEdge(newLocation, tiles[newLocation]);
+			}
+			if (j > 0)
+			{
+				newLocation = sf::Vector2f(j - 1, i);
+				tiles[location].addEdge(newLocation, tiles[newLocation]);
+			}
+		}
+	}
+	sf::Vector2f location = sf::Vector2f(10, 6);
+	tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
+	location = sf::Vector2f(6, 10);
+	tiles[location].setUnit(new Tank(location, 2, m_resourceManager->getTexture("spritesheet"), tileSize));
+	location = sf::Vector2f(4, 10);
+	tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
+	location = sf::Vector2f(5, 5);
+	tiles[location].setUnit(new Bomber(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
 }
 
 void Map::render(sf::RenderWindow & window, float tileSize)

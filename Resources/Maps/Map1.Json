@@ -1,0 +1,15 @@
+{
+  "Map Size": [ 20, 15 ],
+  "Tiles": [
+    {
+      "Forest": [
+        {
+          "Position": [ 1, 1 ]
+        },
+        {
+          "Position": [ 2, 2 ]
+        }
+      ]
+    }
+  ]
+}

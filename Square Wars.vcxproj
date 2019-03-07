@@ -149,6 +149,9 @@
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitTypes.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Maps\Map1.Json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

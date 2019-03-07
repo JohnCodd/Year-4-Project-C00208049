@@ -22,6 +22,9 @@
     <Filter Include="Header Files\Move Charts">
       <UniqueIdentifier>{a199d8c2-b25e-4413-a39a-5603159dfa6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Maps">
+      <UniqueIdentifier>{06294d83-5276-4027-a411-b00d833cdf35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -89,5 +92,10 @@
     <ClInclude Include="Sea.h">
       <Filter>Header Files\Map Tiles</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Maps\Map1.Json">
+      <Filter>Resource Files\Maps</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -15,7 +15,9 @@ class Map
 public:
 	Map();
 	Map(int sizeX, int sizeY, int tSize, int& turn, ResourceManager& rm);
+	Map(int tSize, int& turn, ResourceManager& rm);
 	~Map() {};
+	void loadMap(std::string levelFilePath);
 	void render(sf::RenderWindow & window, float tileSize);
 	void leftclickMap(sf::Vector2f e);
 	void rightclick(sf::Event e);
@@ -41,4 +43,5 @@ private:
 	sf::Texture spritesheet;
 	sf::Texture highlightBorder;
 	sf::Texture enemyBorder;
+	ResourceManager* m_resourceManager;
 };

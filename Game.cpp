@@ -4,11 +4,12 @@ static double const MS_PER_UPDATE = 10.0;
 
 Game::Game()
 	: m_window(sf::VideoMode(windowWidth, windowHeight, 32), "Square Wars", sf::Style::Default), m_rManager(),
-		 m_map(mapWidth, mapHeight, tileSize, playerTurn, m_rManager)
+		 m_map(tileSize, playerTurn, m_rManager)
 	
 {
 	m_window.setFramerateLimit(60);
 	m_rManager.loadFont("times", "./Resources/Fonts/times.ttf");
+	m_map.loadMap("./Resources/Maps/Map1.json");
 	gameView.setSize(sf::Vector2f(20 * tileSize, 15 * tileSize));
 	gameView.setCenter(sf::Vector2f((20 * tileSize) / 2, (15 * tileSize) / 2));
 	gameWindowWidth = (20 * tileSize) / windowWidth;
