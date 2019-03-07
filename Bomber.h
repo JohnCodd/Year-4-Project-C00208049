@@ -11,6 +11,7 @@ public:
 		m_health = m_maxHealth;
 		m_power = 80;
 		m_movement = 7;
+		m_remainingMoves = m_movement;
 		type = "Bomber";
 		m_gridLocation = sf::Vector2f(1, 1);
 	};
@@ -18,8 +19,9 @@ public:
 	{
 		m_maxHealth = 100;
 		m_health = m_maxHealth;
-		m_power = 50;
+		m_power = 80;
 		m_movement = 7;
+		m_remainingMoves = m_movement;
 		type = "Bomber";
 		m_gridLocation = location;
 		m_player = p;

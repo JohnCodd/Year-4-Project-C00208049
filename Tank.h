@@ -11,6 +11,7 @@ public:
 		m_health = m_maxHealth;
 		m_power = 50;
 		m_movement = 6;
+		m_remainingMoves = m_movement;
 		type = "Tank";
 		m_gridLocation = sf::Vector2f(1, 1);
 	};
@@ -20,6 +21,7 @@ public:
 		m_health = m_maxHealth;
 		m_power = 50;
 		m_movement = 6;
+		m_remainingMoves = m_movement;
 		type = "Tank";
 		m_gridLocation = location;
 		m_player = p;

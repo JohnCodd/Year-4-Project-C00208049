@@ -24,6 +24,7 @@ public:
 	void fButton(sf::Vector2f v, ResourceManager& rm);
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();
+	void turnUpkeep();
 	bool checkRange(Tile& tile);
 	bool checkTile(sf::Vector2f v);
 	Tile* getClosest(Tile& t);

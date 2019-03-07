@@ -88,6 +88,7 @@ void Game::processEvents()
 					{
 						playerTurn = 1;
 					}
+					m_map.turnUpkeep();
 						
 				}
 			}

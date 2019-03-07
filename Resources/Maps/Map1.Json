@@ -4,10 +4,55 @@
     {
       "Forest": [
         {
-          "Position": [ 1, 1 ]
+          "Position": [ 4, 6 ]
         },
         {
           "Position": [ 2, 2 ]
+        }
+      ],
+
+      "Sea": [
+        {
+          "Position": [ 5, 6 ]
+        },
+        {
+          "Position": [ 6, 6 ]
+        },
+        {
+          "Position": [ 5, 7 ]
+        },
+        {
+          "Position": [ 6, 7 ]
+        },
+        {
+          "Position": [ 5, 8 ]
+        },
+        {
+          "Position": [ 6, 8 ]
+        }
+      ]
+    }
+  ],
+  "Units": [
+    {
+      "Tank": [
+        {
+          "Position": [ 10, 6 ],
+          "Player": 1
+        },
+        {
+          "Position": [ 6, 10 ],
+          "Player": 2
+        },
+        {
+          "Position": [ 4, 10 ],
+          "Player": 1
+        }
+      ],
+      "Bomber": [
+        {
+          "Position": [ 5, 5 ],
+          "Player": 1
         }
       ]
     }

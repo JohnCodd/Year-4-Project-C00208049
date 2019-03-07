@@ -161,21 +161,22 @@ void Map::loadMap(std::string levelFilePath)
 			p.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
 			tiles[sf::Vector2f(j, i)] = p;
 			sf::Vector2f location;
-			int t = 0;
-			int fTiles = 0;
-			while (!file["Tiles"][t].is_null())
-			{
-				while (!file["Tiles"][t]["Forest"][fTiles].is_null())
-				{
-					auto position = file["Tiles"][t]["Forest"][fTiles]["Position"];
-					location = sf::Vector2f(position[0], position[1]);
-					Forest f = Forest(location, m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
-					f.setRect(sf::FloatRect(location.x * tileSize, location.y * tileSize, tileSize, tileSize));
-					tiles[location] = f;
-					fTiles++;
-				}
-				t++;
-			}
+			// May be reimplemented later
+			//int t = 0;
+			//int fTiles = 0;
+			//while (!file["Tiles"][t].is_null())
+			//{
+			//	while (!file["Tiles"][t]["Forest"][fTiles].is_null())
+			//	{
+			//		auto position = file["Tiles"][t]["Forest"][fTiles]["Position"];
+			//		location = sf::Vector2f(position[0], position[1]);
+			//		Forest f = Forest(location, m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
+			//		f.setRect(sf::FloatRect(location.x * tileSize, location.y * tileSize, tileSize, tileSize));
+			//		tiles[location] = f;
+			//		fTiles++;
+			//	}
+			//	t++;
+			//}
 			location = sf::Vector2f(j, i);
 			sf::Vector2f newLocation;
 			if (i > 0)
@@ -200,14 +201,99 @@ void Map::loadMap(std::string levelFilePath)
 			}
 		}
 	}
-	sf::Vector2f location = sf::Vector2f(10, 6);
-	tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
-	location = sf::Vector2f(6, 10);
-	tiles[location].setUnit(new Tank(location, 2, m_resourceManager->getTexture("spritesheet"), tileSize));
-	location = sf::Vector2f(4, 10);
-	tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
-	location = sf::Vector2f(5, 5);
-	tiles[location].setUnit(new Bomber(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
+	sf::Vector2f location;
+	int t = 0;
+	while (!file["Tiles"][t].is_null())
+	{
+		int fTiles = 0;
+		while (!file["Tiles"][t]["Forest"][fTiles].is_null())
+		{
+			auto position = file["Tiles"][t]["Forest"][fTiles]["Position"];
+			location = sf::Vector2f(position[0], position[1]);
+			bool tileFound = false;
+			Tile* targetTile = nullptr;
+			for (auto &t : tiles)
+			{
+				if (t.second.getRect().intersects(sf::FloatRect(location.x * tileSize, location.y * tileSize, 2, 2)))
+				{
+					location = t.first;
+					tileFound = true;
+					targetTile = &t.second;
+				}
+			}
+			if (tileFound)
+			{
+				Forest f = Forest(location, m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
+				for (auto pair : targetTile->getAdj())
+				{
+					auto &p = pair.first;
+					auto &e = pair.second;
+					f.addEdge(p, *e);
+				}
+				f.setRect(sf::FloatRect(location.x * tileSize, location.y * tileSize, tileSize, tileSize));
+				f.setUnit(tiles[location].getUnit());
+				tiles[location] = f;
+				std::cout << "Forest Tile Created: " << location.x << "," << location.y << std::endl;
+			}
+			fTiles++;
+		}
+		int sTiles = 0;
+		while (!file["Tiles"][t]["Sea"][sTiles].is_null())
+		{
+			auto position = file["Tiles"][t]["Sea"][sTiles]["Position"];
+			location = sf::Vector2f(position[0], position[1]);
+			bool tileFound = false;
+			Tile* targetTile = nullptr;
+			for (auto &t : tiles)
+			{
+				if (t.second.getRect().intersects(sf::FloatRect(location.x * tileSize, location.y * tileSize, 2, 2)))
+				{
+					location = t.first;
+					tileFound = true;
+					targetTile = &t.second;
+				}
+			}
+			if (tileFound)
+			{
+				Sea s = Sea(location, m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
+				for (auto pair : targetTile->getAdj())
+				{
+					auto &p = pair.first;
+					auto &e = pair.second;
+					s.addEdge(p, *e);
+				}
+				s.setRect(sf::FloatRect(location.x * tileSize, location.y * tileSize, tileSize, tileSize));
+				s.setUnit(tiles[location].getUnit());
+				tiles[location] = s;
+				std::cout << "Sea Tile Created: " << location.x << "," << location.y << std::endl;
+			}
+			sTiles++;
+		}
+		t++;
+	}
+	int u = 0;
+	while (!file["Units"][u].is_null())
+	{
+		int tankNo = 0;
+		while (!file["Units"][u]["Tank"][tankNo].is_null())
+		{
+			auto position = file["Units"][u]["Tank"][tankNo]["Position"];
+			auto playerNo = file["Units"][u]["Tank"][tankNo]["Player"].get<int>();
+			location = sf::Vector2f(position[0], position[1]);
+			tiles[location].setUnit(new Tank(location, playerNo, m_resourceManager->getTexture("spritesheet"), tileSize));
+			tankNo++;
+		}
+		int bomberNo = 0;
+		while (!file["Units"][u]["Bomber"][bomberNo].is_null())
+		{
+			auto position = file["Units"][u]["Bomber"][bomberNo]["Position"];
+			auto playerNo = file["Units"][u]["Bomber"][bomberNo]["Player"].get<int>();
+			location = sf::Vector2f(position[0], position[1]);
+			tiles[location].setUnit(new Bomber(location, playerNo, m_resourceManager->getTexture("spritesheet"), tileSize));
+			bomberNo++;
+		}
+		u++;
+	}
 }
 
 void Map::render(sf::RenderWindow & window, float tileSize)
@@ -239,57 +325,57 @@ void Map::leftclickMap(sf::Vector2f v)
 	{
 		if (targetTile->getUnit() != nullptr)
 		{
-			//Checks if there is no actively selected unit
-			if (selectedUnit == nullptr)
+			if (targetTile->getUnit()->getTurn())
 			{
-				if (targetTile->getUnit()->getOwner() == *playerTurn)
+				//Checks if there is no actively selected unit
+				if (selectedUnit == nullptr)
 				{
-					selectedUnit = targetTile->getUnit();
-					moveSearch(tiles[tileLocation], tiles[tileLocation].getUnit()->getMoves());
-					//expandtile(sf::Vector2f(static_cast<int>((mousePosition.x) + 1), static_cast<int>((mousePosition.y) + 1)), units[tileLocation].getMoves());
-					std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
-				}
-			}
-			//Checks if the targeted unit is an enemy and is within range of the selected unit
-			else if (tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(tiles[tileLocation]))
-			{
-				Unit* targetUnit = tiles[tileLocation].getUnit();
-				Tile* closest = getClosest(tiles[tileLocation]);
-				//Damage the units
-				targetUnit->damage(selectedUnit->getPower() + 10 - targetTile->getDefense());
-				if (targetUnit->getHealth() <= 0)
-				{
-					targetUnit = nullptr;
-				}
-				if (targetUnit)
-				{
-					selectedUnit->damage(targetUnit->getPower() - closest->getDefense());
-					if (selectedUnit->getHealth() <= 0)
+					if (targetTile->getUnit()->getOwner() == *playerTurn)
 					{
-						selectedUnit = nullptr;
+						selectedUnit = targetTile->getUnit();
+						moveSearch(tiles[tileLocation], tiles[tileLocation].getUnit()->getRemainingMoves());
+						//expandtile(sf::Vector2f(static_cast<int>((mousePosition.x) + 1), static_cast<int>((mousePosition.y) + 1)), units[tileLocation].getMoves());
+						std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
 					}
 				}
-				else
+				//Checks if the targeted unit is an enemy and is within range of the selected unit
+				else if (tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(tiles[tileLocation]))
 				{
-					Unit movingUnit = *selectedUnit;
-					movingUnit.setLocation(tileLocation);
-					tiles[tileLocation].setUnit(new Unit(movingUnit));
-					tiles[selectedUnit->getLocation()].setUnit(nullptr);
-				}
-				if (&tiles[selectedUnit->getLocation()] != closest && targetUnit)
-				{
-					Unit movingUnit = *selectedUnit;
-					//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
-					//{
-					//	//return p.second == *closest;
-					//});
+					Unit* targetUnit = tiles[tileLocation].getUnit();
+					Tile* closest = getClosest(tiles[tileLocation]);
+					//Damage the units
+					targetUnit->damage(selectedUnit->getPower() + 10 - targetTile->getDefense());
+					if (targetUnit->getHealth() <= 0)
+					{
+						tiles[targetUnit->getLocation()].setUnit(nullptr);
+						targetUnit = nullptr;
+					}
+					if (targetUnit)
+					{
+						selectedUnit->damage(targetUnit->getPower() - closest->getDefense());
+						if (selectedUnit->getHealth() <= 0)
+						{
+							tiles[selectedUnit->getLocation()].setUnit(nullptr);
+							selectedUnit = nullptr;
+						}
+					}
+					if (&tiles[selectedUnit->getLocation()] != closest && targetUnit)
+					{
+						Unit movingUnit = *selectedUnit;
+						//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
+						//{
+						//	//return p.second == *closest;
+						//});
 
-					movingUnit.setLocation(targetLocation);
-					closest->setUnit(new Unit(movingUnit));
-					tiles[selectedUnit->getLocation()].setUnit(nullptr);
+						movingUnit.setLocation(targetLocation);
+						closest->setUnit(new Unit(movingUnit));
+						tiles[selectedUnit->getLocation()].setUnit(nullptr);
+					}
+					selectedUnit = nullptr;
+					tiles[targetLocation].getUnit()->moveTaken(tiles[targetLocation].getSCost());
+					tiles[targetLocation].getUnit()->setTurn(false);
+					clearTiles();
 				}
-				selectedUnit = nullptr;
-				clearTiles();
 			}
 		}
 		else if (tiles[tileLocation].getHighlighted() == true)
@@ -299,6 +385,7 @@ void Map::leftclickMap(sf::Vector2f v)
 			tiles[tileLocation].setUnit(new Unit(movingUnit));
 			tiles[selectedUnit->getLocation()].setUnit(nullptr);
 			selectedUnit = nullptr;
+			tiles[tileLocation].getUnit()->moveTaken(tiles[tileLocation].getSCost());
 			clearTiles();
 		}
 	}
@@ -397,6 +484,21 @@ void Map::clearTiles()
 	{
 		tiles[a.first].setHighlight(false);
 		tiles[a.first].setEnemy(false);
+	}
+}
+
+void Map::turnUpkeep()
+{
+	for (auto const& a : tiles)
+	{
+		auto t = a.second;
+		if (t.getUnit())
+		{
+			if (t.getUnit()->getOwner() == *playerTurn)
+			{
+				t.getUnit()->upkeep();
+			}
+		}
 	}
 }
 
