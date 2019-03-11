@@ -76,10 +76,6 @@
     {
       "Tank": [
         {
-          "Position": [ 10, 6 ],
-          "Player": 1
-        },
-        {
           "Position": [ 6, 10 ],
           "Player": 2
         },
@@ -88,13 +84,23 @@
           "Player": 1
         }
       ],
-      "Bomber": [
+      "Heli": [
         {
           "Position": [ 5, 5 ],
           "Player": 1
         },
         {
           "Position": [ 8, 10 ],
+          "Player": 2
+        }
+      ],
+      "AntiAir": [
+        {
+          "Position": [ 7, 5 ],
+          "Player": 1
+        },
+        {
+          "Position": [ 10, 10 ],
           "Player": 2
         }
       ]

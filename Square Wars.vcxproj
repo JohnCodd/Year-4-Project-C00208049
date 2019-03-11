@@ -132,6 +132,9 @@
     <ClCompile Include="ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AntiAir.h" />
+    <ClInclude Include="AntiAirDamageChart.h" />
+    <ClInclude Include="AntiAirMoveChart.h" />
     <ClInclude Include="BaseDamageChart.h" />
     <ClInclude Include="BaseMoveChart.h" />
     <ClInclude Include="Bomber.h" />
@@ -140,6 +143,8 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Forest.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Heli.h" />
+    <ClInclude Include="HeliDamageChart.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Plains.h" />
     <ClInclude Include="ResourceManager.h" />

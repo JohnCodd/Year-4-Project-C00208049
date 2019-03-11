@@ -21,22 +21,24 @@ public:
 		m_highlightRed.setSize(sf::Vector2f(m_tileSize, m_tileSize));
 	};
 	virtual ~Tile() {};
+	virtual void addEdge(sf::Vector2f v, Tile& tile) { m_adj.push_back({ v, &tile }); }
+	//Getters
 	virtual TileTypes getType() { return this->m_type; }
-	virtual void setHighlight(bool b) {	m_highlighted = b; }
 	virtual bool getHighlighted() {	return this->m_highlighted; }
 	virtual int getCost() {	return this->m_moveCost; }
 	virtual int getDefense() { return this->m_defense; }
-	virtual void setUnit(Unit* u) { m_unit = u; }
-	virtual void addEdge(sf::Vector2f v, Tile& tile) { m_adj.push_back({ v, &tile }); }
 	virtual Unit* getUnit()	{ return m_unit; }
-	virtual void setVisited(bool b)	{ visited = b; }
 	virtual bool getVisited() {	return visited;	}
-	virtual void setSCost(int sc) {	m_searchCost = sc; }
 	virtual int getSCost() { return m_searchCost; }
 	virtual Tile* getPrevious()	{ return m_previous; }
-	virtual void setPrevious(Tile &t) {	m_previous = &t; }
-	virtual void setEnemy(bool b) {	m_enemy = b; }
 	virtual bool getEnemy() { return m_enemy; }
+	// Setters
+	virtual void setHighlight(bool b) { m_highlighted = b; }
+	virtual void setPrevious(Tile &t) {	m_previous = &t; }
+	virtual void setUnit(Unit* u) { m_unit = u; }
+	virtual void setVisited(bool b) { visited = b; }
+	virtual void setSCost(int sc) { m_searchCost = sc; }
+	virtual void setEnemy(bool b) {	m_enemy = b; }
 
 	std::list<std::pair<sf::Vector2f, Tile*>>& getAdj() { return m_adj; }
 

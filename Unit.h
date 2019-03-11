@@ -13,7 +13,7 @@ public:
 	virtual void moveTaken(int movement) { this->m_remainingMoves = movement; }
 	virtual void upkeep() { this->m_remainingMoves = this->m_movement; this->m_turnTaken = true; }
 	virtual sf::Vector2f getLocation() { return this->m_gridLocation; }
-	virtual UnitTypes getType() {	return this->type; }
+	virtual UnitTypes getType() {	return this->m_type; }
 	virtual int getMoves() { return this->m_movement;	}
 	virtual int getRemainingMoves() { return this->m_remainingMoves; }
 	virtual int getHealth()	{ return this->m_health; }
@@ -32,7 +32,7 @@ public:
 protected:
 	int m_health, m_maxHealth, m_tileSize, m_power, m_movement, m_remainingMoves, m_player;
 	bool m_turnTaken = true;
-	UnitTypes type;
+	UnitTypes m_type;
 	BaseMoveChart m_moveChart;
 	BaseDamageChart m_damageChart;
 	sf::Vector2f m_gridLocation;

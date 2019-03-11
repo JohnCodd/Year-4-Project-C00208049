@@ -1,34 +1,32 @@
 #pragma once
 #include "Unit.h"
-#include "AirMoveChart.h"
-#include "BomberDamageChart.h"
+#include "AntiAirMoveChart.h"
+#include "AntiAirDamageChart.h"
 
-class Bomber : public Unit
+class AntiAir : public Unit
 {
 public:
-	Bomber()
+	AntiAir()
 	{
 		m_maxHealth = 100;
 		m_health = m_maxHealth;
-		m_power = 80;
-		m_movement = 7;
+		m_movement = 5;
 		m_remainingMoves = m_movement;
-		m_type = UnitTypes::Bomber;
+		m_type = UnitTypes::AntiAir;
 		m_gridLocation = sf::Vector2f(1, 1);
 	};
-	Bomber(sf::Vector2f location, int p, sf::Texture& tileset, int tSize)
+	AntiAir(sf::Vector2f location, int p, sf::Texture& tileset, int tSize)
 	{
 		m_maxHealth = 100;
 		m_health = m_maxHealth;
-		m_power = 80;
-		m_movement = 7;
+		m_movement = 5;
 		m_remainingMoves = m_movement;
-		m_type = UnitTypes::Bomber;
+		m_type = UnitTypes::AntiAir;
 		m_gridLocation = location;
 		m_player = p;
 		m_tileSize = tSize;
 		m_sprite.setTexture(&tileset);
-		m_sprite.setTextureRect(sf::IntRect(24, 232, 24, 24));
+		m_sprite.setTextureRect(sf::IntRect(193, 106, 22, 22));
 		if (m_player == 1)
 		{
 			m_sprite.setFillColor(sf::Color(100, 100, 255));
@@ -38,7 +36,7 @@ public:
 			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
 		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
-		m_moveChart = AirMoveChart();
-		m_damageChart = BomberDamageChart();
-	};
+		m_moveChart = AntiAirMoveChart();
+		m_damageChart = AntiAirDamageChart();
+	}
 };

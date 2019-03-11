@@ -10,6 +10,8 @@
 // Units
 #include "Tank.h"
 #include "Bomber.h"
+#include "Heli.h"
+#include "AntiAir.h"
 
 
 Map::Map()
@@ -298,6 +300,24 @@ void Map::loadMap(std::string levelFilePath)
 			m_tiles[location].setUnit(new Bomber(location, playerNo, m_resourceManager->getTexture("spritesheet"), m_tileSize));
 			bomberNo++;
 		}
+		int heliNo = 0;
+		while (!file["Units"][u]["Heli"][heliNo].is_null())
+		{
+			auto position = file["Units"][u]["Heli"][heliNo]["Position"];
+			auto playerNo = file["Units"][u]["Heli"][heliNo]["Player"].get<int>();
+			location = sf::Vector2f(position[0], position[1]);
+			m_tiles[location].setUnit(new Heli(location, playerNo, m_resourceManager->getTexture("spritesheet"), m_tileSize));
+			heliNo++;
+		}
+		int aaNo = 0;
+		while (!file["Units"][u]["AntiAir"][aaNo].is_null())
+		{
+			auto position = file["Units"][u]["AntiAir"][aaNo]["Position"];
+			auto playerNo = file["Units"][u]["AntiAir"][aaNo]["Player"].get<int>();
+			location = sf::Vector2f(position[0], position[1]);
+			m_tiles[location].setUnit(new AntiAir(location, playerNo, m_resourceManager->getTexture("spritesheet"), m_tileSize));
+			aaNo++;
+		}
 		u++;
 	}
 }
@@ -365,7 +385,7 @@ void Map::leftclickMap(sf::Vector2f v)
 							selectedUnit = nullptr;
 						}
 					}
-					if (&m_tiles[selectedUnit->getLocation()] != closest && targetUnit)
+					if (&m_tiles[selectedUnit->getLocation()] != closest)
 					{
 						Unit movingUnit = *selectedUnit;
 						//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)

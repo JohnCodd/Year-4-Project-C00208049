@@ -104,6 +104,21 @@
     <ClInclude Include="BomberDamageChart.h">
       <Filter>Header Files\Damage Charts</Filter>
     </ClInclude>
+    <ClInclude Include="Heli.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="HeliDamageChart.h">
+      <Filter>Header Files\Damage Charts</Filter>
+    </ClInclude>
+    <ClInclude Include="AntiAirMoveChart.h">
+      <Filter>Header Files\Move Charts</Filter>
+    </ClInclude>
+    <ClInclude Include="AntiAirDamageChart.h">
+      <Filter>Header Files\Damage Charts</Filter>
+    </ClInclude>
+    <ClInclude Include="AntiAir.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Maps\Map1.Json">
