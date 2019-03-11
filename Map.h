@@ -29,20 +29,24 @@ public:
 	bool checkTile(sf::Vector2f v);
 	Tile* getClosest(Tile& t);
 	sf::Vector2f convertToKey(sf::Vector2f v);
+	sf::Vector2f getMapSize() { return sf::Vector2f(m_sizeX, m_sizeY); }
+	sf::FloatRect getBorder() { return m_mapBorder; }
 	Tile& getTile(sf::Vector2f v);
 	Unit& getUnit(sf::Vector2f v);
 private:
-	int sizeX;
-	int sizeY;
-	int* playerTurn;
-	float tileSize;
-	std::map<sf::Vector2f, Tile, VectorComparator> tiles;
-	std::map<sf::Vector2f, Unit, VectorComparator> units;
-	sf::Vector2f targetLocation;
+	int m_sizeX;
+	int m_sizeY;
+	int* m_playerTurn;
+	float m_tileSize;
+	std::map<sf::Vector2f, Tile, VectorComparator> m_tiles;
+	std::map<sf::Vector2f, Unit, VectorComparator> m_units;
+	sf::Vector2f m_targetLocation;
 	Unit* selectedUnit = nullptr;
-	sf::Texture tileset;
-	sf::Texture spritesheet;
-	sf::Texture highlightBorder;
-	sf::Texture enemyBorder;
+	sf::Texture m_tileset;
+	sf::Texture m_spritesheet;
+	sf::Texture m_highlightBorder;
+	sf::Texture m_enemyBorder;
 	ResourceManager* m_resourceManager;
+	sf::FloatRect m_mapBorder;
+	sf::RectangleShape m_visualBorder;
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "Unit.h"
 #include "AirMoveChart.h"
+#include "BomberDamageChart.h"
 
 class Bomber : public Unit
 {
@@ -12,7 +13,7 @@ public:
 		m_power = 80;
 		m_movement = 7;
 		m_remainingMoves = m_movement;
-		type = "Bomber";
+		type = UnitTypes::Bomber;
 		m_gridLocation = sf::Vector2f(1, 1);
 	};
 	Bomber(sf::Vector2f location, int p, sf::Texture& tileset, int tSize)
@@ -22,7 +23,7 @@ public:
 		m_power = 80;
 		m_movement = 7;
 		m_remainingMoves = m_movement;
-		type = "Bomber";
+		type = UnitTypes::Bomber;
 		m_gridLocation = location;
 		m_player = p;
 		m_tileSize = tSize;
@@ -37,6 +38,7 @@ public:
 			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
 		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
-		m_chart = AirMoveChart();
+		m_moveChart = AirMoveChart();
+		m_damageChart = BomberDamageChart();
 	};
 };

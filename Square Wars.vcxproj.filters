@@ -25,6 +25,9 @@
     <Filter Include="Resource Files\Maps">
       <UniqueIdentifier>{06294d83-5276-4027-a411-b00d833cdf35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Damage Charts">
+      <UniqueIdentifier>{04d33d3c-01c8-4ea2-8e09-7a0fa3792a4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -91,6 +94,15 @@
     </ClInclude>
     <ClInclude Include="Sea.h">
       <Filter>Header Files\Map Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDamageChart.h">
+      <Filter>Header Files\Damage Charts</Filter>
+    </ClInclude>
+    <ClInclude Include="TankDamageChart.h">
+      <Filter>Header Files\Damage Charts</Filter>
+    </ClInclude>
+    <ClInclude Include="BomberDamageChart.h">
+      <Filter>Header Files\Damage Charts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

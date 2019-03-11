@@ -20,6 +20,6 @@ public:
 			return 99;
 		}
 	}
-
+protected:
 	std::map<TileTypes, std::optional<int>> m_chart;
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "Unit.h"
 #include "TankMoveChart.h"
+#include "TankDamageChart.h"
 
 class Tank : public Unit
 {
@@ -12,7 +13,7 @@ public:
 		m_power = 50;
 		m_movement = 6;
 		m_remainingMoves = m_movement;
-		type = "Tank";
+		type = UnitTypes::Tank;
 		m_gridLocation = sf::Vector2f(1, 1);
 	};
 	Tank(sf::Vector2f location, int p, sf::Texture& tileset, int tSize)
@@ -22,7 +23,7 @@ public:
 		m_power = 50;
 		m_movement = 6;
 		m_remainingMoves = m_movement;
-		type = "Tank";
+		type = UnitTypes::Tank;
 		m_gridLocation = location;
 		m_player = p;
 		m_tileSize = tSize;
@@ -37,7 +38,8 @@ public:
 			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
 		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
-		m_chart = TankMoveChart();
+		m_moveChart = TankMoveChart();
+		m_damageChart = TankDamageChart();
 	};
 	~Tank() {};
 };

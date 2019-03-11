@@ -11,7 +11,7 @@ Game::Game()
 	m_rManager.loadFont("times", "./Resources/Fonts/times.ttf");
 	m_map.loadMap("./Resources/Maps/Map1.json");
 	gameView.setSize(sf::Vector2f(20 * tileSize, 15 * tileSize));
-	gameView.setCenter(sf::Vector2f((20 * tileSize) / 2, (15 * tileSize) / 2));
+	gameView.setCenter(sf::Vector2f(((20 * tileSize) / 2) - tileSize, ((15 * tileSize) / 2) - tileSize));
 	gameWindowWidth = (20 * tileSize) / windowWidth;
 	sideBarX = windowWidth * gameWindowWidth;
 	gameView.setViewport(sf::FloatRect(0.0f, 0.0f, gameWindowWidth, 1.0f));
@@ -80,7 +80,7 @@ void Game::processEvents()
 				sf::FloatRect gameMap = sf::FloatRect(windowWidth * gameView.getViewport().left, 0, windowWidth * gameView.getViewport().width, windowHeight);
 				sf::Vector2f mouse = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
 				m_map.leftclickMap(m_window.mapPixelToCoords(sf::Vector2i(mouse)));
-				if (turnButton.getRect().intersects(sf::FloatRect(m_window.mapPixelToCoords(sf::Vector2i(mouse)), sf::Vector2f(2, 2))))
+				if (turnButton.getRect().intersects(sf::FloatRect(sf::Vector2f(mouse), sf::Vector2f(2, 2))))
 				{
 						
 					playerTurn++;
@@ -105,19 +105,31 @@ void Game::processEvents()
 			}
 			if (event.key.code == sf::Keyboard::Right)
 			{
-				gameView.setCenter(gameView.getCenter().x + tileSize, gameView.getCenter().y);
+				if (gameView.getCenter().x < (m_map.getBorder().width - (gameView.getSize().x / 2) + tileSize))
+				{
+					gameView.setCenter(gameView.getCenter().x + tileSize, gameView.getCenter().y);
+				}
 			}
 			if (event.key.code == sf::Keyboard::Left)
 			{
-				gameView.setCenter(gameView.getCenter().x - tileSize, gameView.getCenter().y);
+				if (gameView.getCenter().x > (gameView.getSize().x / 2) - tileSize)
+				{
+					gameView.setCenter(gameView.getCenter().x - tileSize, gameView.getCenter().y);
+				}
 			}
 			if (event.key.code == sf::Keyboard::Up)
 			{
-				gameView.setCenter(gameView.getCenter().x, gameView.getCenter().y - tileSize);
+				if (gameView.getCenter().y > (gameView.getSize().y / 2) - tileSize)
+				{
+					gameView.setCenter(gameView.getCenter().x, gameView.getCenter().y - tileSize);
+				}
 			}
 			if (event.key.code == sf::Keyboard::Down)
 			{
-				gameView.setCenter(gameView.getCenter().x, gameView.getCenter().y + tileSize);
+				if (gameView.getCenter().y < (m_map.getBorder().height - (gameView.getSize().y / 2) + tileSize))
+				{
+					gameView.setCenter(gameView.getCenter().x, gameView.getCenter().y + tileSize);
+				}
 			}
 		}
 	}
@@ -135,7 +147,7 @@ void Game::update(double dt)
 			{
 				unitHighlighted = true;
 				unitHealth.setString("Health: " + std::to_string(m_map.getUnit(mapKey).getHealth()));
-				unitMoves.setString("Moves: " + std::to_string(m_map.getUnit(mapKey).getMoves()));
+				unitMoves.setString("Moves: " + std::to_string(m_map.getUnit(mapKey).getRemainingMoves()));
 			}
 			else
 			{

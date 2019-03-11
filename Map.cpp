@@ -14,56 +14,56 @@
 
 Map::Map()
 {
-	sizeX = 10;
-	sizeY = 10;
+	m_sizeX = 10;
+	m_sizeY = 10;
 
-	if (!tileset.loadFromFile("./Resources/Tilesets/tileset.png"))
+	if (!m_tileset.loadFromFile("./Resources/Tilesets/tileset.png"))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
-	if (!spritesheet.loadFromFile("./Resources/Sprite Sheets/Unit Spritesheet.png"))
+	if (!m_spritesheet.loadFromFile("./Resources/Sprite Sheets/Unit Spritesheet.png"))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
-	if (!highlightBorder.loadFromFile("./Resources/Tilesets/BorderHighlight.png"))
+	if (!m_highlightBorder.loadFromFile("./Resources/Tilesets/BorderHighlight.png"))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
-	if (!enemyBorder.loadFromFile("./Resources/Tilesets/EnemyHighlight.png"))
+	if (!m_enemyBorder.loadFromFile("./Resources/Tilesets/EnemyHighlight.png"))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
-	for (int i = 1; i < sizeY; i++)
+	for (int i = 1; i < m_sizeY; i++)
 	{
-		for (int j = 1; j < sizeX; j++)
+		for (int j = 1; j < m_sizeX; j++)
 		{
-			Plains p = Plains(sf::Vector2f(j,i), tileset, highlightBorder, enemyBorder, tileSize);
+			Plains p = Plains(sf::Vector2f(j,i), m_tileset, m_highlightBorder, m_enemyBorder, m_tileSize);
 			//sf::RectangleShape texture;
 			//texture.setTexture(&tileset);
 			//texture.setSize(sf::Vector2f(16, 16));
 			//texture.setTextureRect(sf::IntRect(16, 16, 16, 16));
 			//p.setTexture(&texture);
-			tiles[sf::Vector2f(j, i)] = p;
+			m_tiles[sf::Vector2f(j, i)] = p;
 		}
 	}
 }
 
 Map::Map(int x, int y, int tSize, int& turn, ResourceManager& rm)
 {
-	sizeX = x;
-	sizeY = y;
-	tileSize = tSize;
-	playerTurn = &turn;
+	m_sizeX = x;
+	m_sizeY = y;
+	m_tileSize = tSize;
+	m_playerTurn = &turn;
 	m_resourceManager = &rm;
 	m_resourceManager->loadTexture("tileset", "./Resources/Tilesets/tileset.png");
 	m_resourceManager->loadTexture("spritesheet", "./Resources/Sprite Sheets/Unit Spritesheet.png");
 	m_resourceManager->loadTexture("highlightBorder", "./Resources/Tilesets/BorderHighlight.png");
 	m_resourceManager->loadTexture("enemyBorder", "./Resources/Tilesets/EnemyHighlight.png");
-	if (!tileset.loadFromFile("./Resources/Tilesets/tileset.png"))
+	if (!m_tileset.loadFromFile("./Resources/Tilesets/tileset.png"))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
@@ -83,60 +83,60 @@ Map::Map(int x, int y, int tSize, int& turn, ResourceManager& rm)
 	//	std::string s("Error loading texture");
 	//	throw std::exception(s.c_str());
 	//}
-	for (int i = 0; i < sizeY; i++)
+	for (int i = 0; i < m_sizeY; i++)
 	{
-		for (int j = 0; j < sizeX; j++)
+		for (int j = 0; j < m_sizeX; j++)
 		{
 			if (i < 12)
 			{
-				Plains p = Plains(sf::Vector2f(j, i), m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
-				p.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
-				tiles[sf::Vector2f(j, i)] = p;
+				Plains p = Plains(sf::Vector2f(j, i), m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), m_tileSize);
+				p.setRect(sf::FloatRect(j * m_tileSize, i * m_tileSize, m_tileSize, m_tileSize));
+				m_tiles[sf::Vector2f(j, i)] = p;
 			}
 			else
 			{
-				Sea s = Sea(sf::Vector2f(j, i), m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
-				s.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
-				tiles[sf::Vector2f(j, i)] = s;
+				Sea s = Sea(sf::Vector2f(j, i), m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), m_tileSize);
+				s.setRect(sf::FloatRect(j * m_tileSize, i * m_tileSize, m_tileSize, m_tileSize));
+				m_tiles[sf::Vector2f(j, i)] = s;
 			}
 			sf::Vector2f location = sf::Vector2f(j, i);
 			sf::Vector2f newLocation;
 			if (i > 0)
 			{
 				newLocation = sf::Vector2f(j, i - 1);
-				tiles[location].addEdge(newLocation, tiles[newLocation]);
+				m_tiles[location].addEdge(newLocation, m_tiles[newLocation]);
 			}
-			if (j + 1 < sizeX)
+			if (j + 1 < m_sizeX)
 			{
 				newLocation = sf::Vector2f(j + 1, i);
-				tiles[location].addEdge(newLocation, tiles[newLocation]);
+				m_tiles[location].addEdge(newLocation, m_tiles[newLocation]);
 			}
-			if (i + 1 < sizeY)
+			if (i + 1 < m_sizeY)
 			{
 				newLocation = sf::Vector2f(j, i + 1);
-				tiles[location].addEdge(newLocation, tiles[newLocation]);
+				m_tiles[location].addEdge(newLocation, m_tiles[newLocation]);
 			}
 			if (j > 0)
 			{
 				newLocation = sf::Vector2f(j - 1, i);
-				tiles[location].addEdge(newLocation, tiles[newLocation]);
+				m_tiles[location].addEdge(newLocation, m_tiles[newLocation]);
 			}
 		}
 	}
 	sf::Vector2f location = sf::Vector2f(10, 6);
-	tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
+	m_tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), m_tileSize));
 	location = sf::Vector2f(6, 10);
-	tiles[location].setUnit(new Tank(location, 2, m_resourceManager->getTexture("spritesheet"), tileSize));
+	m_tiles[location].setUnit(new Tank(location, 2, m_resourceManager->getTexture("spritesheet"), m_tileSize));
 	location = sf::Vector2f(4, 10);
-	tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
+	m_tiles[location].setUnit(new Tank(location, 1, m_resourceManager->getTexture("spritesheet"), m_tileSize));
 	location = sf::Vector2f(5, 5);
-	tiles[location].setUnit(new Bomber(location, 1, m_resourceManager->getTexture("spritesheet"), tileSize));
+	m_tiles[location].setUnit(new Bomber(location, 1, m_resourceManager->getTexture("spritesheet"), m_tileSize));
 }
 
 Map::Map(int tSize, int& turn, ResourceManager& rm)
 {
-	tileSize = tSize;
-	playerTurn = &turn;
+	m_tileSize = tSize;
+	m_playerTurn = &turn;
 	m_resourceManager = &rm;
 }
 
@@ -147,19 +147,25 @@ void Map::loadMap(std::string levelFilePath)
 	i >> file;
 	std::cout << file << std::endl;
 	auto mapSize = file["Map Size"];
-	sizeX = mapSize[0];
-	sizeY = mapSize[1];
+	m_sizeX = mapSize[0];
+	m_sizeY = mapSize[1];
+	m_mapBorder = sf::FloatRect(0, 0, m_sizeX * m_tileSize, m_sizeY * m_tileSize);
+	m_visualBorder.setPosition(0, 0);
+	m_visualBorder.setSize(sf::Vector2f(m_mapBorder.width, m_mapBorder.height));
+	m_visualBorder.setOutlineColor(sf::Color::Yellow);
+	m_visualBorder.setOutlineThickness(5);
+	m_visualBorder.setFillColor(sf::Color::Transparent);
 	m_resourceManager->loadTexture("tileset", "./Resources/Tilesets/tileset.png");
 	m_resourceManager->loadTexture("spritesheet", "./Resources/Sprite Sheets/Unit Spritesheet.png");
 	m_resourceManager->loadTexture("highlightBorder", "./Resources/Tilesets/BorderHighlight.png");
 	m_resourceManager->loadTexture("enemyBorder", "./Resources/Tilesets/EnemyHighlight.png");
-	for (int i = 0; i < sizeY; i++)
+	for (int i = 0; i < m_sizeY; i++)
 	{
-		for (int j = 0; j < sizeX; j++)
+		for (int j = 0; j < m_sizeX; j++)
 		{
-			Plains p = Plains(sf::Vector2f(j, i), m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
-			p.setRect(sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize));
-			tiles[sf::Vector2f(j, i)] = p;
+			Plains p = Plains(sf::Vector2f(j, i), m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), m_tileSize);
+			p.setRect(sf::FloatRect(j * m_tileSize, i * m_tileSize, m_tileSize, m_tileSize));
+			m_tiles[sf::Vector2f(j, i)] = p;
 			sf::Vector2f location;
 			// May be reimplemented later
 			//int t = 0;
@@ -182,22 +188,22 @@ void Map::loadMap(std::string levelFilePath)
 			if (i > 0)
 			{
 				newLocation = sf::Vector2f(j, i - 1);
-				tiles[location].addEdge(newLocation, tiles[newLocation]);
+				m_tiles[location].addEdge(newLocation, m_tiles[newLocation]);
 			}
-			if (j + 1 < sizeX)
+			if (j + 1 < m_sizeX)
 			{
 				newLocation = sf::Vector2f(j + 1, i);
-				tiles[location].addEdge(newLocation, tiles[newLocation]);
+				m_tiles[location].addEdge(newLocation, m_tiles[newLocation]);
 			}
-			if (i + 1 < sizeY)
+			if (i + 1 < m_sizeY)
 			{
 				newLocation = sf::Vector2f(j, i + 1);
-				tiles[location].addEdge(newLocation, tiles[newLocation]);
+				m_tiles[location].addEdge(newLocation, m_tiles[newLocation]);
 			}
 			if (j > 0)
 			{
 				newLocation = sf::Vector2f(j - 1, i);
-				tiles[location].addEdge(newLocation, tiles[newLocation]);
+				m_tiles[location].addEdge(newLocation, m_tiles[newLocation]);
 			}
 		}
 	}
@@ -212,9 +218,9 @@ void Map::loadMap(std::string levelFilePath)
 			location = sf::Vector2f(position[0], position[1]);
 			bool tileFound = false;
 			Tile* targetTile = nullptr;
-			for (auto &t : tiles)
+			for (auto &t : m_tiles)
 			{
-				if (t.second.getRect().intersects(sf::FloatRect(location.x * tileSize, location.y * tileSize, 2, 2)))
+				if (t.second.getRect().intersects(sf::FloatRect(location.x * m_tileSize, location.y * m_tileSize, 2, 2)))
 				{
 					location = t.first;
 					tileFound = true;
@@ -223,16 +229,16 @@ void Map::loadMap(std::string levelFilePath)
 			}
 			if (tileFound)
 			{
-				Forest f = Forest(location, m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
+				Forest f = Forest(location, m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), m_tileSize);
 				for (auto pair : targetTile->getAdj())
 				{
 					auto &p = pair.first;
 					auto &e = pair.second;
 					f.addEdge(p, *e);
 				}
-				f.setRect(sf::FloatRect(location.x * tileSize, location.y * tileSize, tileSize, tileSize));
-				f.setUnit(tiles[location].getUnit());
-				tiles[location] = f;
+				f.setRect(sf::FloatRect(location.x * m_tileSize, location.y * m_tileSize, m_tileSize, m_tileSize));
+				f.setUnit(m_tiles[location].getUnit());
+				m_tiles[location] = f;
 				std::cout << "Forest Tile Created: " << location.x << "," << location.y << std::endl;
 			}
 			fTiles++;
@@ -244,9 +250,9 @@ void Map::loadMap(std::string levelFilePath)
 			location = sf::Vector2f(position[0], position[1]);
 			bool tileFound = false;
 			Tile* targetTile = nullptr;
-			for (auto &t : tiles)
+			for (auto &t : m_tiles)
 			{
-				if (t.second.getRect().intersects(sf::FloatRect(location.x * tileSize, location.y * tileSize, 2, 2)))
+				if (t.second.getRect().intersects(sf::FloatRect(location.x * m_tileSize, location.y * m_tileSize, 2, 2)))
 				{
 					location = t.first;
 					tileFound = true;
@@ -255,16 +261,16 @@ void Map::loadMap(std::string levelFilePath)
 			}
 			if (tileFound)
 			{
-				Sea s = Sea(location, m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), tileSize);
+				Sea s = Sea(location, m_resourceManager->getTexture("tileset"), m_resourceManager->getTexture("highlightBorder"), m_resourceManager->getTexture("enemyBorder"), m_tileSize);
 				for (auto pair : targetTile->getAdj())
 				{
 					auto &p = pair.first;
 					auto &e = pair.second;
 					s.addEdge(p, *e);
 				}
-				s.setRect(sf::FloatRect(location.x * tileSize, location.y * tileSize, tileSize, tileSize));
-				s.setUnit(tiles[location].getUnit());
-				tiles[location] = s;
+				s.setRect(sf::FloatRect(location.x * m_tileSize, location.y * m_tileSize, m_tileSize, m_tileSize));
+				s.setUnit(m_tiles[location].getUnit());
+				m_tiles[location] = s;
 				std::cout << "Sea Tile Created: " << location.x << "," << location.y << std::endl;
 			}
 			sTiles++;
@@ -280,7 +286,7 @@ void Map::loadMap(std::string levelFilePath)
 			auto position = file["Units"][u]["Tank"][tankNo]["Position"];
 			auto playerNo = file["Units"][u]["Tank"][tankNo]["Player"].get<int>();
 			location = sf::Vector2f(position[0], position[1]);
-			tiles[location].setUnit(new Tank(location, playerNo, m_resourceManager->getTexture("spritesheet"), tileSize));
+			m_tiles[location].setUnit(new Tank(location, playerNo, m_resourceManager->getTexture("spritesheet"), m_tileSize));
 			tankNo++;
 		}
 		int bomberNo = 0;
@@ -289,7 +295,7 @@ void Map::loadMap(std::string levelFilePath)
 			auto position = file["Units"][u]["Bomber"][bomberNo]["Position"];
 			auto playerNo = file["Units"][u]["Bomber"][bomberNo]["Player"].get<int>();
 			location = sf::Vector2f(position[0], position[1]);
-			tiles[location].setUnit(new Bomber(location, playerNo, m_resourceManager->getTexture("spritesheet"), tileSize));
+			m_tiles[location].setUnit(new Bomber(location, playerNo, m_resourceManager->getTexture("spritesheet"), m_tileSize));
 			bomberNo++;
 		}
 		u++;
@@ -298,7 +304,7 @@ void Map::loadMap(std::string levelFilePath)
 
 void Map::render(sf::RenderWindow & window, float tileSize)
 {
-	for (auto &t : tiles)
+	for (auto &t : m_tiles)
 	{
 		t.second.render(window);
 		if (t.second.getUnit())
@@ -306,14 +312,15 @@ void Map::render(sf::RenderWindow & window, float tileSize)
 			t.second.getUnit()->render(window);
 		}		
 	}
+	window.draw(m_visualBorder);
 }
 
 void Map::leftclickMap(sf::Vector2f v)
 {
-	sf::Vector2f mousePosition = sf::Vector2f(floor(v.x / tileSize), floor(v.y / tileSize));
+	sf::Vector2f mousePosition = sf::Vector2f(floor(v.x / m_tileSize), floor(v.y / m_tileSize));
 	sf::Vector2f tileLocation;
 	Tile* targetTile = nullptr;
-	for (auto &t : tiles)
+	for (auto &t : m_tiles)
 	{
 		if (t.second.getRect().intersects(sf::FloatRect(v.x, v.y, 2, 2)))
 		{
@@ -330,36 +337,35 @@ void Map::leftclickMap(sf::Vector2f v)
 				//Checks if there is no actively selected unit
 				if (selectedUnit == nullptr)
 				{
-					if (targetTile->getUnit()->getOwner() == *playerTurn)
+					if (targetTile->getUnit()->getOwner() == *m_playerTurn)
 					{
 						selectedUnit = targetTile->getUnit();
-						moveSearch(tiles[tileLocation], tiles[tileLocation].getUnit()->getRemainingMoves());
-						//expandtile(sf::Vector2f(static_cast<int>((mousePosition.x) + 1), static_cast<int>((mousePosition.y) + 1)), units[tileLocation].getMoves());
+						moveSearch(m_tiles[tileLocation], m_tiles[tileLocation].getUnit()->getRemainingMoves());
 						std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
 					}
 				}
 				//Checks if the targeted unit is an enemy and is within range of the selected unit
-				else if (tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(tiles[tileLocation]))
+				else if (m_tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(m_tiles[tileLocation]))
 				{
-					Unit* targetUnit = tiles[tileLocation].getUnit();
-					Tile* closest = getClosest(tiles[tileLocation]);
+					Unit* targetUnit = m_tiles[tileLocation].getUnit();
+					Tile* closest = getClosest(m_tiles[tileLocation]);
 					//Damage the units
-					targetUnit->damage(selectedUnit->getPower() + 10 - targetTile->getDefense());
+					targetUnit->damage(selectedUnit->getDamageChartValue(targetUnit->getType()) + 10 - targetTile->getDefense());
 					if (targetUnit->getHealth() <= 0)
 					{
-						tiles[targetUnit->getLocation()].setUnit(nullptr);
+						m_tiles[targetUnit->getLocation()].setUnit(nullptr);
 						targetUnit = nullptr;
 					}
 					if (targetUnit)
 					{
-						selectedUnit->damage(targetUnit->getPower() - closest->getDefense());
+						selectedUnit->damage(targetUnit->getDamageChartValue(selectedUnit->getType()) - closest->getDefense());
 						if (selectedUnit->getHealth() <= 0)
 						{
-							tiles[selectedUnit->getLocation()].setUnit(nullptr);
+							m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 							selectedUnit = nullptr;
 						}
 					}
-					if (&tiles[selectedUnit->getLocation()] != closest && targetUnit)
+					if (&m_tiles[selectedUnit->getLocation()] != closest && targetUnit)
 					{
 						Unit movingUnit = *selectedUnit;
 						//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
@@ -367,25 +373,25 @@ void Map::leftclickMap(sf::Vector2f v)
 						//	//return p.second == *closest;
 						//});
 
-						movingUnit.setLocation(targetLocation);
+						movingUnit.setLocation(m_targetLocation);
 						closest->setUnit(new Unit(movingUnit));
-						tiles[selectedUnit->getLocation()].setUnit(nullptr);
+						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 					}
 					selectedUnit = nullptr;
-					tiles[targetLocation].getUnit()->moveTaken(tiles[targetLocation].getSCost());
-					tiles[targetLocation].getUnit()->setTurn(false);
+					m_tiles[m_targetLocation].getUnit()->moveTaken(m_tiles[m_targetLocation].getSCost());
+					m_tiles[m_targetLocation].getUnit()->setTurn(false);
 					clearTiles();
 				}
 			}
 		}
-		else if (tiles[tileLocation].getHighlighted() == true)
+		else if (m_tiles[tileLocation].getHighlighted() == true)
 		{
 			Unit movingUnit = *selectedUnit;
 			movingUnit.setLocation(sf::Vector2f(mousePosition.x, mousePosition.y));
-			tiles[tileLocation].setUnit(new Unit(movingUnit));
-			tiles[selectedUnit->getLocation()].setUnit(nullptr);
+			m_tiles[tileLocation].setUnit(new Unit(movingUnit));
+			m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 			selectedUnit = nullptr;
-			tiles[tileLocation].getUnit()->moveTaken(tiles[tileLocation].getSCost());
+			m_tiles[tileLocation].getUnit()->moveTaken(m_tiles[tileLocation].getSCost());
 			clearTiles();
 		}
 	}
@@ -401,7 +407,7 @@ void Map::moveSearch(Tile& start, int moves)
 {
 	//BFS Algorithim
 	std::list<Tile*> queue;
-	for (auto &tile : tiles)
+	for (auto &tile : m_tiles)
 	{
 		tile.second.setSCost(0);
 		tile.second.setVisited(false);
@@ -420,7 +426,7 @@ void Map::moveSearch(Tile& start, int moves)
 			{
 				std::cout << "Test" << std::endl;
 			}
-			int movesRemaining = queue.front()->getSCost() - start.getUnit()->getChartCost(e->getType());
+			int movesRemaining = queue.front()->getSCost() - start.getUnit()->getMoveChartCost(e->getType());
 			if (movesRemaining >= 0)
 			{
 				if (movesRemaining > e->getSCost())
@@ -440,7 +446,10 @@ void Map::moveSearch(Tile& start, int moves)
 					}
 					else
 					{
-						e->setEnemy(true);
+						if (start.getUnit()->getDamageChartValue(e->getUnit()->getType()) > 0)
+						{
+							e->setEnemy(true);
+						}
 					}
 				}
 				else
@@ -465,7 +474,10 @@ void Map::moveSearch(Tile& start, int moves)
 					}
 					else
 					{
-						e->setEnemy(true);
+						if (start.getUnit()->getDamageChartValue(e->getUnit()->getType()) > 0)
+						{
+							e->setEnemy(true);
+						}
 					}
 				}
 			}
@@ -480,21 +492,21 @@ void Map::moveSearch(Tile& start, int moves)
 
 void Map::clearTiles()
 {
-	for (auto const& a : tiles)
+	for (auto const& a : m_tiles)
 	{
-		tiles[a.first].setHighlight(false);
-		tiles[a.first].setEnemy(false);
+		m_tiles[a.first].setHighlight(false);
+		m_tiles[a.first].setEnemy(false);
 	}
 }
 
 void Map::turnUpkeep()
 {
-	for (auto const& a : tiles)
+	for (auto const& a : m_tiles)
 	{
 		auto t = a.second;
 		if (t.getUnit())
 		{
-			if (t.getUnit()->getOwner() == *playerTurn)
+			if (t.getUnit()->getOwner() == *m_playerTurn)
 			{
 				t.getUnit()->upkeep();
 			}
@@ -517,7 +529,7 @@ bool Map::checkRange(Tile & tile)
 
 bool Map::checkTile(sf::Vector2f v)
 {
-	if (&tiles[v] != nullptr)
+	if (&m_tiles[v] != nullptr)
 	{
 		return true;
 	}
@@ -533,7 +545,7 @@ void Map::fButton(sf::Vector2f v, ResourceManager& rm)
 	sf::Vector2f tileLocation;
 	bool tileFound = false;
 	Tile* targetTile = nullptr;
-	for (auto &t : tiles)
+	for (auto &t : m_tiles)
 	{
 		if (t.second.getRect().intersects(sf::FloatRect(v.x, v.y, 2, 2)))
 		{
@@ -544,16 +556,16 @@ void Map::fButton(sf::Vector2f v, ResourceManager& rm)
 	}
 	if (tileFound)
 	{
-		Forest f = Forest(tileLocation, rm.getTexture("tileset"), rm.getTexture("highlightBorder"), rm.getTexture("enemyBorder"), tileSize);
+		Forest f = Forest(tileLocation, rm.getTexture("tileset"), rm.getTexture("highlightBorder"), rm.getTexture("enemyBorder"), m_tileSize);
 		for (auto pair : targetTile->getAdj())
 		{
 			auto &p = pair.first;
 			auto &e = pair.second;
 			f.addEdge(p, *e);
 		}
-		f.setRect(sf::FloatRect(tileLocation.x * tileSize, tileLocation.y * tileSize, tileSize, tileSize));
-		f.setUnit(tiles[tileLocation].getUnit());
-		tiles[tileLocation] = f;
+		f.setRect(sf::FloatRect(tileLocation.x * m_tileSize, tileLocation.y * m_tileSize, m_tileSize, m_tileSize));
+		f.setUnit(m_tiles[tileLocation].getUnit());
+		m_tiles[tileLocation] = f;
 	}
 }
 
@@ -571,14 +583,14 @@ Tile* Map::getClosest(Tile& t)
 				if (highest->getSCost() < a->getSCost())
 				{
 					highest = a;
-					targetLocation = pair.first;
+					m_targetLocation = pair.first;
 					cost = highest->getSCost();
 				}
 			}
 			else
 			{
 				highest = a;
-				targetLocation = pair.first;
+				m_targetLocation = pair.first;
 				cost = highest->getSCost();
 			}
 		}
@@ -588,15 +600,15 @@ Tile* Map::getClosest(Tile& t)
 
 sf::Vector2f Map::convertToKey(sf::Vector2f v)
 {
-	return sf::Vector2f(floor(v.x / tileSize), floor(v.y / tileSize));
+	return sf::Vector2f(floor(v.x / m_tileSize), floor(v.y / m_tileSize));
 }
 
 Tile & Map::getTile(sf::Vector2f v)
 {
-	return tiles[v];
+	return m_tiles[v];
 }
 
 Unit & Map::getUnit(sf::Vector2f v)
 {
-	return *tiles[v].getUnit();
+	return *m_tiles[v].getUnit();
 }

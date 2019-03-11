@@ -8,6 +8,27 @@
         },
         {
           "Position": [ 2, 2 ]
+        },
+        {
+          "Position": [ 8, 4 ]
+        },
+        {
+          "Position": [ 8, 5 ]
+        },
+        {
+          "Position": [ 9, 5 ]
+        },
+        {
+          "Position": [ 9, 6 ]
+        },
+        {
+          "Position": [ 9, 4 ]
+        },
+        {
+          "Position": [ 12, 11 ]
+        },
+        {
+          "Position": [ 10, 11 ]
         }
       ],
 
@@ -29,6 +50,24 @@
         },
         {
           "Position": [ 6, 8 ]
+        },
+        {
+          "Position": [ 15, 6 ]
+        },
+        {
+          "Position": [ 15, 7 ]
+        },
+        {
+          "Position": [ 15, 8 ]
+        },
+        {
+          "Position": [ 14, 7 ]
+        },
+        {
+          "Position": [ 15, 7 ]
+        },
+        {
+          "Position": [ 13, 7 ]
         }
       ]
     }
@@ -53,6 +92,10 @@
         {
           "Position": [ 5, 5 ],
           "Player": 1
+        },
+        {
+          "Position": [ 8, 10 ],
+          "Player": 2
         }
       ]
     }
