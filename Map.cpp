@@ -352,10 +352,10 @@ void Map::leftclickMap(sf::Vector2f v)
 	{
 		if (targetTile->getUnit() != nullptr)
 		{
-			if (targetTile->getUnit()->getTurn())
+			//Checks if there is no actively selected unit
+			if (selectedUnit == nullptr)
 			{
-				//Checks if there is no actively selected unit
-				if (selectedUnit == nullptr)
+				if (targetTile->getUnit()->getTurn())
 				{
 					if (targetTile->getUnit()->getOwner() == *m_playerTurn)
 					{
@@ -364,44 +364,44 @@ void Map::leftclickMap(sf::Vector2f v)
 						std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
 					}
 				}
-				//Checks if the targeted unit is an enemy and is within range of the selected unit
-				else if (m_tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(m_tiles[tileLocation]))
+			}
+			//Checks if the targeted unit is an enemy and is within range of the selected unit
+			else if (m_tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(m_tiles[tileLocation]))
+			{
+				Unit* targetUnit = m_tiles[tileLocation].getUnit();
+				Tile* closest = getClosest(m_tiles[tileLocation]);
+				//Damage the units
+				targetUnit->damage(selectedUnit->getDamageChartValue(targetUnit->getType()) + 10 - targetTile->getDefense());
+				if (targetUnit->getHealth() <= 0)
 				{
-					Unit* targetUnit = m_tiles[tileLocation].getUnit();
-					Tile* closest = getClosest(m_tiles[tileLocation]);
-					//Damage the units
-					targetUnit->damage(selectedUnit->getDamageChartValue(targetUnit->getType()) + 10 - targetTile->getDefense());
-					if (targetUnit->getHealth() <= 0)
-					{
-						m_tiles[targetUnit->getLocation()].setUnit(nullptr);
-						targetUnit = nullptr;
-					}
-					if (targetUnit)
-					{
-						selectedUnit->damage(targetUnit->getDamageChartValue(selectedUnit->getType()) - closest->getDefense());
-						if (selectedUnit->getHealth() <= 0)
-						{
-							m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
-							selectedUnit = nullptr;
-						}
-					}
-					if (&m_tiles[selectedUnit->getLocation()] != closest)
-					{
-						Unit movingUnit = *selectedUnit;
-						//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
-						//{
-						//	//return p.second == *closest;
-						//});
-
-						movingUnit.setLocation(m_targetLocation);
-						closest->setUnit(new Unit(movingUnit));
-						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
-					}
-					selectedUnit = nullptr;
-					m_tiles[m_targetLocation].getUnit()->moveTaken(m_tiles[m_targetLocation].getSCost());
-					m_tiles[m_targetLocation].getUnit()->setTurn(false);
-					clearTiles();
+					m_tiles[targetUnit->getLocation()].setUnit(nullptr);
+					targetUnit = nullptr;
 				}
+				if (targetUnit)
+				{
+					selectedUnit->damage(targetUnit->getDamageChartValue(selectedUnit->getType()) - closest->getDefense());
+					if (selectedUnit->getHealth() <= 0)
+					{
+						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
+						selectedUnit = nullptr;
+					}
+				}
+				if (&m_tiles[selectedUnit->getLocation()] != closest)
+				{
+					Unit movingUnit = *selectedUnit;
+					//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
+					//{
+					//	//return p.second == *closest;
+					//});
+
+					movingUnit.setLocation(m_targetLocation);
+					closest->setUnit(new Unit(movingUnit));
+					m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
+				}
+				selectedUnit = nullptr;
+				m_tiles[m_targetLocation].getUnit()->moveTaken(m_tiles[m_targetLocation].getSCost());
+				m_tiles[m_targetLocation].getUnit()->setTurn(false);
+				clearTiles();
 			}
 		}
 		else if (m_tiles[tileLocation].getHighlighted() == true)
@@ -526,9 +526,10 @@ void Map::turnUpkeep()
 		auto t = a.second;
 		if (t.getUnit())
 		{
-			if (t.getUnit()->getOwner() == *m_playerTurn)
+			auto u = t.getUnit();
+			if (u->getOwner() == *m_playerTurn)
 			{
-				t.getUnit()->upkeep();
+				u->upkeep();
 			}
 		}
 	}
