@@ -162,6 +162,7 @@ void Game::update(double dt)
 	{
 		tileHighlighted = false;
 	}
+	m_map.update(dt);
 }
 
 void Game::render()

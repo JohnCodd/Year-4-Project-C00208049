@@ -32,6 +32,7 @@ public:
 	virtual int getSCost() { return m_searchCost; }
 	virtual Tile* getPrevious()	{ return m_previous; }
 	virtual bool getEnemy() { return m_enemy; }
+	virtual sf::Vector2f getLocation() { return m_gridLocation; }
 	// Setters
 	virtual void setHighlight(bool b) { m_highlighted = b; }
 	virtual void setPrevious(Tile &t) {	m_previous = &t; }
@@ -39,6 +40,10 @@ public:
 	virtual void setVisited(bool b) { visited = b; }
 	virtual void setSCost(int sc) { m_searchCost = sc; }
 	virtual void setEnemy(bool b) {	m_enemy = b; }
+
+	virtual bool operator==(Tile t) { 
+		return m_gridLocation == t.getLocation(); 
+	}
 
 	std::list<std::pair<sf::Vector2f, Tile*>>& getAdj() { return m_adj; }
 

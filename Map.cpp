@@ -154,7 +154,7 @@ void Map::loadMap(std::string levelFilePath)
 	m_mapBorder = sf::FloatRect(0, 0, m_sizeX * m_tileSize, m_sizeY * m_tileSize);
 	m_visualBorder.setPosition(0, 0);
 	m_visualBorder.setSize(sf::Vector2f(m_mapBorder.width, m_mapBorder.height));
-	m_visualBorder.setOutlineColor(sf::Color::Yellow);
+	m_visualBorder.setOutlineColor(sf::Color(255, 102, 0));
 	m_visualBorder.setOutlineThickness(5);
 	m_visualBorder.setFillColor(sf::Color::Transparent);
 	m_resourceManager->loadTexture("tileset", "./Resources/Tilesets/tileset.png");
@@ -322,15 +322,29 @@ void Map::loadMap(std::string levelFilePath)
 	}
 }
 
+void Map::update(float dt)
+{
+	for (auto &t : m_tiles)
+	{
+		if (t.second.getUnit())
+		{
+			t.second.getUnit()->animatePath(dt);
+		}
+	}
+}
+
 void Map::render(sf::RenderWindow & window, float tileSize)
 {
 	for (auto &t : m_tiles)
 	{
 		t.second.render(window);
+	}
+	for (auto &t :m_tiles)
+	{
 		if (t.second.getUnit())
 		{
 			t.second.getUnit()->render(window);
-		}		
+		}
 	}
 	window.draw(m_visualBorder);
 }
@@ -359,6 +373,7 @@ void Map::leftclickMap(sf::Vector2f v)
 				{
 					if (targetTile->getUnit()->getOwner() == *m_playerTurn)
 					{
+						startTile = *targetTile;
 						selectedUnit = targetTile->getUnit();
 						moveSearch(m_tiles[tileLocation], m_tiles[tileLocation].getUnit()->getRemainingMoves());
 						std::cout << "Clicked: " << tileLocation.x << ", " << tileLocation.y << std::endl;
@@ -393,8 +408,23 @@ void Map::leftclickMap(sf::Vector2f v)
 					//{
 					//	//return p.second == *closest;
 					//});
+					bool isStart = false;
+					std::list<sf::Vector2f> output;
+					Tile previous = *closest;
+					while (!isStart)
+					{
+						if (!(startTile == previous))
+						{
+							output.push_back(previous.getLocation());
+							previous = *previous.getPrevious();
+						}
+						else
+						{
+							isStart = true;
+						}
+					}
+					movingUnit.setPath(output);
 
-					movingUnit.setLocation(m_targetLocation);
 					closest->setUnit(new Unit(movingUnit));
 					m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 				}
@@ -407,7 +437,22 @@ void Map::leftclickMap(sf::Vector2f v)
 		else if (m_tiles[tileLocation].getHighlighted() == true)
 		{
 			Unit movingUnit = *selectedUnit;
-			movingUnit.setLocation(sf::Vector2f(mousePosition.x, mousePosition.y));
+			bool isStart = false;
+			std::list<sf::Vector2f> output;
+			Tile previous = m_tiles[tileLocation];
+			while (!isStart)
+			{
+				if (!(startTile == previous))
+				{
+					output.push_back(previous.getLocation());
+					previous = *previous.getPrevious();
+				}
+				else
+				{
+					isStart = true;
+				}
+			}
+			movingUnit.setPath(output);
 			m_tiles[tileLocation].setUnit(new Unit(movingUnit));
 			m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 			selectedUnit = nullptr;

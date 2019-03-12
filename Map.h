@@ -18,6 +18,7 @@ public:
 	Map(int tSize, int& turn, ResourceManager& rm);
 	~Map() {};
 	void loadMap(std::string levelFilePath);
+	void update(float dt);
 	void render(sf::RenderWindow & window, float tileSize);
 	void leftclickMap(sf::Vector2f e);
 	void rightclick(sf::Event e);
@@ -41,6 +42,7 @@ private:
 	std::map<sf::Vector2f, Tile, VectorComparator> m_tiles;
 	std::map<sf::Vector2f, Unit, VectorComparator> m_units;
 	sf::Vector2f m_targetLocation;
+	Tile startTile;
 	Unit* selectedUnit = nullptr;
 	sf::Texture m_tileset;
 	sf::Texture m_spritesheet;
