@@ -4,52 +4,112 @@
     {
       "Forest": [
         {
-          "Position": [ 4, 6 ]
-        },
-        {
-          "Position": [ 2, 2 ]
-        },
-        {
-          "Position": [ 8, 4 ]
-        },
-        {
           "Position": [ 8, 5 ]
         },
         {
-          "Position": [ 9, 5 ]
+          "Position": [ 8, 6 ]
         },
         {
-          "Position": [ 9, 6 ]
+          "Position": [ 8, 7 ]
         },
         {
-          "Position": [ 9, 4 ]
+          "Position": [ 8, 8 ]
         },
         {
-          "Position": [ 12, 11 ]
+          "Position": [ 8, 9 ]
         },
         {
-          "Position": [ 10, 11 ]
+          "Position": [ 11, 5 ]
+        },
+        {
+          "Position": [ 11, 6 ]
+        },
+        {
+          "Position": [ 11, 7 ]
+        },
+        {
+          "Position": [ 11, 8 ]
+        },
+        {
+          "Position": [ 11, 9 ]
+        },
+        {
+          "Position": [ 6, 12 ]
+        },
+        {
+          "Position": [ 7, 12 ]
+        },
+        {
+          "Position": [ 8, 12 ]
+        },
+        {
+          "Position": [ 9, 12 ]
+        },
+        {
+          "Position": [ 10, 12 ]
+        },
+        {
+          "Position": [ 11, 12 ]
+        },
+        {
+          "Position": [ 12, 12 ]
+        },
+        {
+          "Position": [ 13, 12 ]
+        },
+        {
+          "Position": [ 6, 2 ]
+        },
+        {
+          "Position": [ 7, 2 ]
+        },
+        {
+          "Position": [ 8, 2 ]
+        },
+        {
+          "Position": [ 9, 2 ]
+        },
+        {
+          "Position": [ 10, 2 ]
+        },
+        {
+          "Position": [ 11, 2 ]
+        },
+        {
+          "Position": [ 12, 2 ]
+        },
+        {
+          "Position": [ 13, 2 ]
         }
       ],
 
       "Sea": [
         {
+          "Position": [ 4, 6 ]
+        },
+        {
           "Position": [ 5, 6 ]
         },
         {
-          "Position": [ 6, 6 ]
+          "Position": [ 4, 7 ]
         },
         {
           "Position": [ 5, 7 ]
         },
         {
-          "Position": [ 6, 7 ]
+          "Position": [ 4, 8 ]
         },
         {
           "Position": [ 5, 8 ]
         },
         {
-          "Position": [ 6, 8 ]
+          "Position": [ 14, 6 ]
+        },
+        {
+          "Position": [ 14, 7 ]
+        },
+        {
+          "Position": [ 14, 8 ]
         },
         {
           "Position": [ 15, 6 ]
@@ -59,15 +119,6 @@
         },
         {
           "Position": [ 15, 8 ]
-        },
-        {
-          "Position": [ 14, 7 ]
-        },
-        {
-          "Position": [ 15, 7 ]
-        },
-        {
-          "Position": [ 13, 7 ]
         }
       ]
     }
@@ -76,31 +127,47 @@
     {
       "Tank": [
         {
-          "Position": [ 6, 10 ],
+          "Position": [ 17, 9 ],
           "Player": 2
         },
         {
-          "Position": [ 4, 10 ],
+          "Position": [ 17, 5 ],
+          "Player": 2
+        },
+        {
+          "Position": [ 2, 9 ],
+          "Player": 1
+        },
+        {
+          "Position": [ 2, 5 ],
           "Player": 1
         }
       ],
       "Heli": [
         {
-          "Position": [ 5, 5 ],
+          "Position": [ 2, 6 ],
           "Player": 1
         },
         {
-          "Position": [ 8, 10 ],
+          "Position": [ 2, 8 ],
+          "Player": 1
+        },
+        {
+          "Position": [ 17, 6 ],
+          "Player": 2
+        },
+        {
+          "Position": [ 17, 8 ],
           "Player": 2
         }
       ],
       "AntiAir": [
         {
-          "Position": [ 7, 5 ],
+          "Position": [ 2, 7 ],
           "Player": 1
         },
         {
-          "Position": [ 10, 10 ],
+          "Position": [ 17, 7 ],
           "Player": 2
         }
       ]

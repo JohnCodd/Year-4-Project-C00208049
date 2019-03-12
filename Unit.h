@@ -12,7 +12,7 @@ public:
 	~Unit() {};
 	virtual void setLocation(sf::Vector2f location) { this->m_gridLocation = location; }
 	virtual void moveTaken(int movement) { this->m_remainingMoves = movement; }
-	virtual void upkeep() { this->m_remainingMoves = this->m_movement; this->m_turnTaken = true; }
+	virtual void upkeep() { this->m_remainingMoves = this->m_movement; this->m_turn = true; }
 	virtual sf::Vector2f getLocation() { return this->m_gridLocation; }
 	virtual UnitTypes getType() {	return this->m_type; }
 	virtual int getMoves() { return this->m_movement;	}
@@ -22,8 +22,8 @@ public:
 	virtual int getOwner() { return this->m_player; }
 	virtual int getMoveChartCost(TileTypes t) { return this->m_moveChart.getCost(t); }
 	virtual int getDamageChartValue(UnitTypes u) { return this->m_damageChart.getDamage(u); }
-	virtual bool getTurn() { return this->m_turnTaken; }
-	virtual void setTurn(bool b) { this->m_turnTaken = b; }
+	virtual bool getTurn() { return this->m_turn; }
+	virtual void setTurn(bool b) { this->m_turn = b; }
 	virtual void setPath(std::list<sf::Vector2f> path) { this->m_path = path; this->m_animate = true; }
 	virtual void damage(int d) { m_health -= d; }
 	virtual void animatePath(float dt) {
@@ -61,12 +61,22 @@ public:
 
 	virtual void render(sf::RenderWindow& window) {
 		m_sprite.setPosition((m_gridLocation.x) * m_tileSize, (m_gridLocation.y) * m_tileSize);
+		sf::Color c = m_sprite.getFillColor();
+		if (m_turn)
+		{
+			c = sf::Color(c.r, c.g, c.b, 255);
+		}
+		else
+		{
+			c = sf::Color(c.r, c.g, c.b, 155);
+		}
+		m_sprite.setFillColor(c);
 		window.draw(m_sprite);
 	}
 protected:
 	int m_health, m_maxHealth, m_tileSize, m_power, m_movement, m_remainingMoves, m_player;
 	float m_speed = 0.005f;
-	bool m_turnTaken = true;
+	bool m_turn = true;
 	bool m_animate = false;
 	UnitTypes m_type;
 	BaseMoveChart m_moveChart;
