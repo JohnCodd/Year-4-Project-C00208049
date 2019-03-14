@@ -549,10 +549,6 @@ void Map::moveSearch(Tile& start, int moves)
 					}
 				}
 			}
-			if (pair.first == sf::Vector2f(4, 10))
-			{
-				std::cout << "Test" << std::endl;
-			}
 		}
 		queue.pop_front();
 	}
@@ -588,7 +584,7 @@ bool Map::checkRange(Tile & tile)
 	for (auto& pair : tile.getAdj())
 	{
 		auto t = pair.second;
-		if (t->getHighlighted())
+		if (t->getHighlighted() && !t->getUnit())
 		{
 			return true;
 		}
