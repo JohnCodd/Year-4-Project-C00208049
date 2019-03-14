@@ -401,36 +401,39 @@ void Map::leftclickMap(sf::Vector2f v)
 						selectedUnit = nullptr;
 					}
 				}
-				if (&m_tiles[selectedUnit->getLocation()] != closest)
+				if (selectedUnit)
 				{
-					Unit movingUnit = *selectedUnit;
-					//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
-					//{
-					//	//return p.second == *closest;
-					//});
-					bool isStart = false;
-					std::list<sf::Vector2f> output;
-					Tile previous = *closest;
-					while (!isStart)
+					if (&m_tiles[selectedUnit->getLocation()] != closest)
 					{
-						if (!(startTile == previous))
+						Unit movingUnit = *selectedUnit;
+						//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
+						//{
+						//	//return p.second == *closest;
+						//});
+						bool isStart = false;
+						std::list<sf::Vector2f> output;
+						Tile previous = *closest;
+						while (!isStart)
 						{
-							output.push_back(previous.getLocation());
-							previous = *previous.getPrevious();
+							if (!(startTile == previous))
+							{
+								output.push_back(previous.getLocation());
+								previous = *previous.getPrevious();
+							}
+							else
+							{
+								isStart = true;
+							}
 						}
-						else
-						{
-							isStart = true;
-						}
-					}
-					movingUnit.setPath(output);
+						movingUnit.setPath(output);
 
-					closest->setUnit(new Unit(movingUnit));
-					m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
+						closest->setUnit(new Unit(movingUnit));
+						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
+					}
+					m_tiles[m_targetLocation].getUnit()->moveTaken(m_tiles[m_targetLocation].getSCost());
+					m_tiles[m_targetLocation].getUnit()->setTurn(false);
 				}
 				selectedUnit = nullptr;
-				m_tiles[m_targetLocation].getUnit()->moveTaken(m_tiles[m_targetLocation].getSCost());
-				m_tiles[m_targetLocation].getUnit()->setTurn(false);
 				clearTiles();
 			}
 		}
@@ -642,7 +645,7 @@ Tile* Map::getClosest(Tile& t)
 	for (auto pair : t.getAdj())
 	{
 		auto a = pair.second;
-		if (a->getHighlighted())
+		if (a->getHighlighted() && !a->getUnit())
 		{
 			if (highest)
 			{
