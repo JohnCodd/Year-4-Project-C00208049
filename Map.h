@@ -40,7 +40,7 @@ private:
 	int* m_playerTurn;
 	float m_tileSize;
 	std::map<sf::Vector2f, Tile, VectorComparator> m_tiles;
-	std::map<sf::Vector2f, Unit, VectorComparator> m_units;
+	std::list<Unit*> m_units;
 	sf::Vector2f m_targetLocation;
 	Tile startTile;
 	Unit* selectedUnit = nullptr;

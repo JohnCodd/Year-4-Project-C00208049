@@ -239,7 +239,6 @@ void Map::loadMap(std::string levelFilePath)
 					f.addEdge(p, *e);
 				}
 				f.setRect(sf::FloatRect(location.x * m_tileSize, location.y * m_tileSize, m_tileSize, m_tileSize));
-				f.setUnit(m_tiles[location].getUnit());
 				m_tiles[location] = f;
 				std::cout << "Forest Tile Created: " << location.x << "," << location.y << std::endl;
 			}
@@ -289,6 +288,7 @@ void Map::loadMap(std::string levelFilePath)
 			auto playerNo = file["Units"][u]["Tank"][tankNo]["Player"].get<int>();
 			location = sf::Vector2f(position[0], position[1]);
 			m_tiles[location].setUnit(new Tank(location, playerNo, m_resourceManager->getTexture("spritesheet"), m_tileSize));
+			m_units.push_back(m_tiles[location].getUnit());
 			tankNo++;
 		}
 		int bomberNo = 0;
@@ -298,6 +298,7 @@ void Map::loadMap(std::string levelFilePath)
 			auto playerNo = file["Units"][u]["Bomber"][bomberNo]["Player"].get<int>();
 			location = sf::Vector2f(position[0], position[1]);
 			m_tiles[location].setUnit(new Bomber(location, playerNo, m_resourceManager->getTexture("spritesheet"), m_tileSize));
+			m_units.push_back(m_tiles[location].getUnit());
 			bomberNo++;
 		}
 		int heliNo = 0;
@@ -307,6 +308,7 @@ void Map::loadMap(std::string levelFilePath)
 			auto playerNo = file["Units"][u]["Heli"][heliNo]["Player"].get<int>();
 			location = sf::Vector2f(position[0], position[1]);
 			m_tiles[location].setUnit(new Heli(location, playerNo, m_resourceManager->getTexture("spritesheet"), m_tileSize));
+			m_units.push_back(m_tiles[location].getUnit());
 			heliNo++;
 		}
 		int aaNo = 0;
@@ -316,6 +318,7 @@ void Map::loadMap(std::string levelFilePath)
 			auto playerNo = file["Units"][u]["AntiAir"][aaNo]["Player"].get<int>();
 			location = sf::Vector2f(position[0], position[1]);
 			m_tiles[location].setUnit(new AntiAir(location, playerNo, m_resourceManager->getTexture("spritesheet"), m_tileSize));
+			m_units.push_back(m_tiles[location].getUnit());
 			aaNo++;
 		}
 		u++;
@@ -339,13 +342,17 @@ void Map::render(sf::RenderWindow & window, float tileSize)
 	{
 		t.second.render(window);
 	}
-	for (auto &t :m_tiles)
+	for (auto u : m_units)
 	{
-		if (t.second.getUnit())
-		{
-			t.second.getUnit()->render(window);
-		}
+		u->render(window);
 	}
+	//for (auto &t :m_tiles)
+	//{
+	//	if (t.second.getUnit())
+	//	{
+	//		t.second.getUnit()->render(window);
+	//	}
+	//}
 	window.draw(m_visualBorder);
 }
 
@@ -390,6 +397,7 @@ void Map::leftclickMap(sf::Vector2f v)
 				if (targetUnit->getHealth() <= 0)
 				{
 					m_tiles[targetUnit->getLocation()].setUnit(nullptr);
+					m_units.erase(std::remove(m_units.begin(), m_units.end(), targetUnit), m_units.end());
 					targetUnit = nullptr;
 				}
 				if (targetUnit)
@@ -398,6 +406,7 @@ void Map::leftclickMap(sf::Vector2f v)
 					if (selectedUnit->getHealth() <= 0)
 					{
 						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
+						m_units.erase(std::remove(m_units.begin(), m_units.end(), selectedUnit), m_units.end());
 						selectedUnit = nullptr;
 					}
 				}
@@ -405,11 +414,6 @@ void Map::leftclickMap(sf::Vector2f v)
 				{
 					if (&m_tiles[selectedUnit->getLocation()] != closest)
 					{
-						Unit movingUnit = *selectedUnit;
-						//auto result = std::find_if(tiles.begin(), tiles.end(), [&](std::pair<sf::Vector2f, Tile> p)
-						//{
-						//	//return p.second == *closest;
-						//});
 						bool isStart = false;
 						std::list<sf::Vector2f> output;
 						Tile previous = *closest;
@@ -425,9 +429,9 @@ void Map::leftclickMap(sf::Vector2f v)
 								isStart = true;
 							}
 						}
-						movingUnit.setPath(output);
+						selectedUnit->setPath(output);
 
-						closest->setUnit(new Unit(movingUnit));
+						closest->setUnit(selectedUnit);
 						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 					}
 					m_tiles[m_targetLocation].getUnit()->moveTaken(m_tiles[m_targetLocation].getSCost());
@@ -439,7 +443,6 @@ void Map::leftclickMap(sf::Vector2f v)
 		}
 		else if (m_tiles[tileLocation].getHighlighted() == true)
 		{
-			Unit movingUnit = *selectedUnit;
 			bool isStart = false;
 			std::list<sf::Vector2f> output;
 			Tile previous = m_tiles[tileLocation];
@@ -455,8 +458,8 @@ void Map::leftclickMap(sf::Vector2f v)
 					isStart = true;
 				}
 			}
-			movingUnit.setPath(output);
-			m_tiles[tileLocation].setUnit(new Unit(movingUnit));
+			selectedUnit->setPath(output);
+			m_tiles[tileLocation].setUnit(selectedUnit);
 			m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 			selectedUnit = nullptr;
 			m_tiles[tileLocation].getUnit()->moveTaken(m_tiles[tileLocation].getSCost());
@@ -641,22 +644,34 @@ Tile* Map::getClosest(Tile& t)
 	for (auto pair : t.getAdj())
 	{
 		auto a = pair.second;
-		if (a->getHighlighted() && !a->getUnit())
+		if (a->getHighlighted())
 		{
-			if (highest)
-			{
-				if (highest->getSCost() < a->getSCost())
-				{
-					highest = a;
-					m_targetLocation = pair.first;
-					cost = highest->getSCost();
-				}
-			}
-			else
+			if (a->getUnit() == selectedUnit)
 			{
 				highest = a;
 				m_targetLocation = pair.first;
-				cost = highest->getSCost();
+				break;
+			}
+			else
+			{
+				if (!a->getUnit())
+				{
+					if (highest)
+					{
+						if (highest->getSCost() < a->getSCost())
+						{
+							highest = a;
+							m_targetLocation = pair.first;
+							cost = highest->getSCost();
+						}
+					}
+					else
+					{
+						highest = a;
+						m_targetLocation = pair.first;
+						cost = highest->getSCost();
+					}
+				}
 			}
 		}
 	}
