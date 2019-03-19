@@ -346,13 +346,6 @@ void Map::render(sf::RenderWindow & window, float tileSize)
 	{
 		u->render(window);
 	}
-	//for (auto &t :m_tiles)
-	//{
-	//	if (t.second.getUnit())
-	//	{
-	//		t.second.getUnit()->render(window);
-	//	}
-	//}
 	window.draw(m_visualBorder);
 }
 
@@ -392,19 +385,22 @@ void Map::leftclickMap(sf::Vector2f v)
 			{
 				Unit* targetUnit = m_tiles[tileLocation].getUnit();
 				Tile* closest = getClosest(m_tiles[tileLocation]);
-				//Damage the units
-				targetUnit->damage(selectedUnit->getDamageChartValue(targetUnit->getType()) + 10 - targetTile->getDefense());
+				//Attack the targeted unit
+				selectedUnit->attack(*targetUnit);
 				if (targetUnit->getHealth() <= 0)
 				{
+					//Unit is destroyed
 					m_tiles[targetUnit->getLocation()].setUnit(nullptr);
 					m_units.erase(std::remove(m_units.begin(), m_units.end(), targetUnit), m_units.end());
 					targetUnit = nullptr;
 				}
 				if (targetUnit)
 				{
-					selectedUnit->damage(targetUnit->getDamageChartValue(selectedUnit->getType()) - closest->getDefense());
+					//Attacked unit returns fire if alive
+					targetUnit->retaliate(*selectedUnit);
 					if (selectedUnit->getHealth() <= 0)
 					{
+						//Unit is destroyed
 						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 						m_units.erase(std::remove(m_units.begin(), m_units.end(), selectedUnit), m_units.end());
 						selectedUnit = nullptr;

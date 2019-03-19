@@ -3,6 +3,7 @@
 #include <iostream>
 #include <list>
 #include "BaseMoveChart.h"
+#include "AirMoveChart.h"
 #include "BaseDamageChart.h"
 class Unit
 {
@@ -20,11 +21,45 @@ public:
 	virtual int getHealth()	{ return this->m_health; }
 	virtual int getPower() { return this->m_power; }
 	virtual int getOwner() { return this->m_player; }
-	virtual int getMoveChartCost(TileTypes t) { return this->m_moveChart.getCost(t); }
-	virtual int getDamageChartValue(UnitTypes u) { return this->m_damageChart.getDamage(u); }
+	virtual int getMoveChartCost(TileTypes t) { return m_moveChart->getCost(t); }
+	virtual int getDamageChartValue(UnitTypes u) { return m_damageChart->getDamage(u); }
+	virtual int getDefense() { return this->m_defense; }
 	virtual bool getTurn() { return this->m_turn; }
 	virtual void setTurn(bool b) { this->m_turn = b; }
 	virtual void setPath(std::list<sf::Vector2f> path) { this->m_path = path; this->m_animate = true; }
+	virtual void setDefense(int d)
+	{
+		if (!dynamic_cast<AirMoveChart*>(m_moveChart))
+		{
+			m_defense = d;
+		}
+	}
+
+	virtual void attack(Unit& u)
+	{
+		u.damage(m_damageChart->getDamage(u.getType()) + 10 - u.getDefense());
+	}
+	virtual void retaliate(Unit& u)
+	{
+		u.damage(m_damageChart->getDamage(u.getType()) - u.getDefense());
+	}
+	virtual std::pair<int, int> preview(Unit& u)
+	{
+		std::pair<int, int> returnPair;
+		int result = m_health - (u.getDamageChartValue(m_type) - m_defense);
+		int targetResult = u.m_health - (m_damageChart->getDamage(u.getType()) + 10 - u.getDefense());
+		if (result < 0)
+		{
+			result = 0;
+		}
+		if (targetResult < 0)
+		{
+			targetResult = 0;
+		}
+		returnPair = std::make_pair(result, targetResult);
+		return returnPair;
+	}
+
 	virtual void damage(int d) { m_health -= d; }
 	virtual void animatePath(float dt) {
 		if (m_animate)
@@ -74,13 +109,13 @@ public:
 		window.draw(m_sprite);
 	}
 protected:
-	int m_health, m_maxHealth, m_tileSize, m_power, m_movement, m_remainingMoves, m_player;
+	int m_health, m_maxHealth, m_tileSize, m_power, m_movement, m_remainingMoves, m_player, m_defense;
 	float m_speed = 0.005f;
 	bool m_turn = true;
 	bool m_animate = false;
 	UnitTypes m_type;
-	BaseMoveChart m_moveChart;
-	BaseDamageChart m_damageChart;
+	BaseMoveChart* m_moveChart;
+	BaseDamageChart* m_damageChart;
 	sf::Vector2f m_gridLocation;
 	sf::RectangleShape m_sprite;
 	std::list<sf::Vector2f> m_path;

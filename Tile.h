@@ -36,7 +36,7 @@ public:
 	// Setters
 	virtual void setHighlight(bool b) { m_highlighted = b; }
 	virtual void setPrevious(Tile &t) {	m_previous = &t; }
-	virtual void setUnit(Unit* u) { m_unit = u; }
+	virtual void setUnit(Unit* u) { m_unit = u; if (m_unit) m_unit->setDefense(m_defense); }
 	virtual void setVisited(bool b) { visited = b; }
 	virtual void setSCost(int sc) { m_searchCost = sc; }
 	virtual void setEnemy(bool b) {	m_enemy = b; }

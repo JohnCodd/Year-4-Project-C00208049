@@ -36,7 +36,7 @@ public:
 			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
 		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
-		m_moveChart = AirMoveChart();
-		m_damageChart = HeliDamageChart();
+		m_moveChart = new AirMoveChart();
+		m_damageChart = new HeliDamageChart();
 	}
 };

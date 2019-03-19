@@ -38,7 +38,7 @@ public:
 			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
 		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
-		m_moveChart = AirMoveChart();
-		m_damageChart = BomberDamageChart();
+		m_moveChart = new AirMoveChart();
+		m_damageChart = new BomberDamageChart();
 	};
 };

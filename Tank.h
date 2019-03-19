@@ -38,8 +38,8 @@ public:
 			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
 		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
-		m_moveChart = TankMoveChart();
-		m_damageChart = TankDamageChart();
+		m_moveChart = new TankMoveChart();
+		m_damageChart = new TankDamageChart();
 	};
 	~Tank() {};
 };
