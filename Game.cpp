@@ -150,7 +150,7 @@ void Game::nextTurn()
 	}
 	for (auto u : aiUnits)
 	{
-		UnitAgent ua = UnitAgent(m_blackboard, u.getLocation());
+		UnitAgent ua = UnitAgent(m_blackboard, u.getLocation(), enemyUnits);
 		ua.execute();
 	}
 	m_blackboard.clearBlackboard();

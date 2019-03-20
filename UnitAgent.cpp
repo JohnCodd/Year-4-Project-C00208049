@@ -2,7 +2,7 @@
 
 
 
-UnitAgent::UnitAgent(Blackboard& b, sf::Vector2f v): m_blackboard(b), m_position(v)
+UnitAgent::UnitAgent(Blackboard& b, sf::Vector2f v, std::list<Unit>& u): m_blackboard(b), m_position(v), m_enemies(u)
 {
 }
 
@@ -15,17 +15,17 @@ void UnitAgent::execute()
 {
 	std::list<BattlePreview> data;
 	sf::Vector2f targetPos;
-	targetPos = sf::Vector2f(5, 5);
-	data = m_blackboard.getBattles(targetPos);
-	BattlePreview battle;
-	battle.setAttackerPos(m_position);
-	if (data.size() == 0)
+	for (auto & u : m_enemies)
 	{
-		m_blackboard.addBattle(targetPos, battle);
-	}
-	else
-	{
-		targetPos = sf::Vector2f(6, 6);
-		m_blackboard.addBattle(targetPos, battle);
+		targetPos = u.getLocation();
+		data = m_blackboard.getBattles(targetPos);
+		if (data.size() == 0)
+		{
+			BattlePreview battle;
+			battle.setAttackerPos(m_position);
+			battle.setDefenderPos(targetPos);
+			m_blackboard.addBattle(targetPos, battle);
+			break;
+		}
 	}
 }
