@@ -82,14 +82,7 @@ void Game::processEvents()
 				m_map.leftclickMap(m_window.mapPixelToCoords(sf::Vector2i(mouse)));
 				if (turnButton.getRect().intersects(sf::FloatRect(sf::Vector2f(mouse), sf::Vector2f(2, 2))))
 				{
-						
-					playerTurn++;
-					if (playerTurn > maxPlayers)
-					{
-						playerTurn = 1;
-					}
-					m_map.turnUpkeep();
-						
+					nextTurn();
 				}
 			}
 			else if (event.mouseButton.button == sf::Mouse::Right)
@@ -133,6 +126,34 @@ void Game::processEvents()
 			}
 		}
 	}
+}
+
+void Game::nextTurn()
+{
+	playerTurn++;
+	if (playerTurn > maxPlayers)
+	{
+		playerTurn = 1;
+	}
+	m_map.turnUpkeep();
+	std::list<Unit> aiUnits, enemyUnits;
+	for (auto u : m_map.getUnitList())
+	{
+		if (u->getOwner() == playerTurn)
+		{
+			aiUnits.push_back(*u);
+		}
+		else
+		{
+			enemyUnits.push_back(*u);
+		}
+	}
+	for (auto u : aiUnits)
+	{
+		UnitAgent ua = UnitAgent(m_blackboard, u.getLocation());
+		ua.execute();
+	}
+	m_blackboard.clearBlackboard();
 }
 
 void Game::update(double dt)

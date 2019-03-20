@@ -125,11 +125,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BattlePreview.cpp" />
+    <ClCompile Include="Blackboard.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="UnitAgent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntiAir.h" />
@@ -137,6 +140,8 @@
     <ClInclude Include="AntiAirMoveChart.h" />
     <ClInclude Include="BaseDamageChart.h" />
     <ClInclude Include="BaseMoveChart.h" />
+    <ClInclude Include="BattlePreview.h" />
+    <ClInclude Include="Blackboard.h" />
     <ClInclude Include="Bomber.h" />
     <ClInclude Include="AirMoveChart.h" />
     <ClInclude Include="BomberDamageChart.h" />
@@ -155,6 +160,7 @@
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileTypes.h" />
     <ClInclude Include="Unit.h" />
+    <ClInclude Include="UnitAgent.h" />
     <ClInclude Include="UnitTypes.h" />
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include "Map.h"
+#include "Blackboard.h"
+#include "UnitAgent.h"
 #include "Button.h"
 #include "ResourceManager.h"
 
@@ -16,6 +18,7 @@ protected:
 	void update(double dt);
 	void render();
 	void processEvents();
+	void nextTurn();
 	double windowWidth = 1620;
 	double windowHeight = 960;
 	int mapWidth = 20;
@@ -34,4 +37,5 @@ protected:
 	float gameWindowWidth;
 	float sideBarX;
 	Button turnButton;
+	Blackboard m_blackboard;
 };

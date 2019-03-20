@@ -34,6 +34,7 @@ public:
 	sf::FloatRect getBorder() { return m_mapBorder; }
 	Tile& getTile(sf::Vector2f v);
 	Unit& getUnit(sf::Vector2f v);
+	std::list<Unit*> getUnitList() { return m_units; }
 private:
 	int m_sizeX;
 	int m_sizeY;

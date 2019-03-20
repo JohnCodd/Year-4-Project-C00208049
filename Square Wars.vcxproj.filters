@@ -28,6 +28,18 @@
     <Filter Include="Header Files\Damage Charts">
       <UniqueIdentifier>{04d33d3c-01c8-4ea2-8e09-7a0fa3792a4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Blackboard">
+      <UniqueIdentifier>{6ddf0ca0-98dc-4486-9b79-9280aaa243d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Blackboard\Micro Agents">
+      <UniqueIdentifier>{b0d42e30-3ce6-4ec2-bb78-d7fcc088d8d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Blackboard">
+      <UniqueIdentifier>{84ff971c-257d-4e24-aa88-d69f7a2de05c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Blackboard\Micro Agents">
+      <UniqueIdentifier>{aee78fe0-d966-48a2-9b3c-8a1d12fce347}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -43,6 +55,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Blackboard.cpp">
+      <Filter>Source Files\Blackboard</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitAgent.cpp">
+      <Filter>Source Files\Blackboard\Micro Agents</Filter>
+    </ClCompile>
+    <ClCompile Include="BattlePreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -118,6 +139,15 @@
     </ClInclude>
     <ClInclude Include="AntiAir.h">
       <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Blackboard.h">
+      <Filter>Header Files\Blackboard</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitAgent.h">
+      <Filter>Header Files\Blackboard\Micro Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="BattlePreview.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
