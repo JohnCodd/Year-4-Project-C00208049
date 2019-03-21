@@ -29,6 +29,7 @@ public:
 	bool checkRange(Tile& tile);
 	bool checkTile(sf::Vector2f v);
 	Tile* getClosest(Tile& t);
+	Tile queryPath(sf::Vector2f startPos, sf::Vector2f endPos);
 	sf::Vector2f convertToKey(sf::Vector2f v);
 	sf::Vector2f getMapSize() { return sf::Vector2f(m_sizeX, m_sizeY); }
 	sf::FloatRect getBorder() { return m_mapBorder; }

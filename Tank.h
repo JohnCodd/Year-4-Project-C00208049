@@ -14,7 +14,7 @@ public:
 		m_movement = 5;
 		m_remainingMoves = m_movement;
 		m_type = UnitTypes::Tank;
-		m_gridLocation = sf::Vector2f(1, 1);
+		m_displayLocation = sf::Vector2f(1, 1);
 	};
 	Tank(sf::Vector2f location, int p, sf::Texture& tileset, int tSize)
 	{
@@ -25,6 +25,7 @@ public:
 		m_remainingMoves = m_movement;
 		m_type = UnitTypes::Tank;
 		m_gridLocation = location;
+		m_displayLocation = location;
 		m_player = p;
 		m_tileSize = tSize;
 		m_sprite.setTexture(&tileset);

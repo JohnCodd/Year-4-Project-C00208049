@@ -66,18 +66,19 @@ public:
 		{
 			if (m_path.size() > 0)
 			{
-				sf::Vector2f normalVector = normalise(m_path.back() - m_gridLocation);
+				sf::Vector2f normalVector = normalise(m_path.back() - m_displayLocation);
 				normalVector.x = (normalVector.x * m_speed) * dt;
 				normalVector.y = (normalVector.y * m_speed) * dt;
-				m_gridLocation += normalVector;
+				m_displayLocation += normalVector;
 				if (distance(m_path.back()) < 0.01)
 				{
-					m_gridLocation = m_path.back();
+					m_displayLocation = m_path.back();
 					m_path.pop_back();
 				}
 			}
 			else
 			{
+				m_displayLocation = m_gridLocation;
 				m_animate = false;
 			}
 		}
@@ -90,12 +91,12 @@ public:
 
 	virtual float distance(sf::Vector2f & v)
 	{
-		sf::Vector2f diff = m_gridLocation - v;
+		sf::Vector2f diff = m_displayLocation - v;
 		return sqrtf(powf(diff.x, 2) + powf(diff.y, 2));
 	}
 
 	virtual void render(sf::RenderWindow& window) {
-		m_sprite.setPosition((m_gridLocation.x) * m_tileSize, (m_gridLocation.y) * m_tileSize);
+		m_sprite.setPosition((m_displayLocation.x) * m_tileSize, (m_displayLocation.y) * m_tileSize);
 		sf::Color c = m_sprite.getFillColor();
 		if (m_turn)
 		{
@@ -116,7 +117,7 @@ protected:
 	UnitTypes m_type;
 	BaseMoveChart* m_moveChart;
 	BaseDamageChart* m_damageChart;
-	sf::Vector2f m_gridLocation;
+	sf::Vector2f m_displayLocation, m_gridLocation;
 	sf::RectangleShape m_sprite;
 	std::list<sf::Vector2f> m_path;
 };

@@ -429,6 +429,7 @@ void Map::leftclickMap(sf::Vector2f v)
 
 						closest->setUnit(selectedUnit);
 						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
+						closest->getUnit()->setLocation(closest->getLocation());
 					}
 					m_tiles[m_targetLocation].getUnit()->moveTaken(m_tiles[m_targetLocation].getSCost());
 					m_tiles[m_targetLocation].getUnit()->setTurn(false);
@@ -446,6 +447,7 @@ void Map::leftclickMap(sf::Vector2f v)
 			{
 				if (!(startTile == previous))
 				{
+					auto test = previous.getLocation();
 					output.push_back(previous.getLocation());
 					previous = *previous.getPrevious();
 				}
@@ -458,6 +460,7 @@ void Map::leftclickMap(sf::Vector2f v)
 			m_tiles[tileLocation].setUnit(selectedUnit);
 			m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 			selectedUnit = nullptr;
+			m_tiles[tileLocation].getUnit()->setLocation(tileLocation);
 			m_tiles[tileLocation].getUnit()->moveTaken(m_tiles[tileLocation].getSCost());
 			clearTiles();
 		}
@@ -672,6 +675,30 @@ Tile* Map::getClosest(Tile& t)
 		}
 	}
 	return highest;
+}
+
+Tile Map::queryPath(sf::Vector2f startPos, sf::Vector2f endPos)
+{
+	Tile& startTile = getTile(startPos);
+	Tile& targetTile = getTile(endPos);
+	moveSearch(startTile, 999);
+	Tile closest = *getClosest(targetTile);
+	Tile previous = closest;
+	bool destinationFound = false;
+	while (!destinationFound)
+	{
+		if (!(startTile.getUnit()->getMoves() >= 999 - previous.getSCost()))
+		{
+			previous = *previous.getPrevious();
+		}
+		else
+		{
+			return previous;
+			destinationFound = true;
+		}
+	}
+	clearTiles();
+	return targetTile;
 }
 
 sf::Vector2f Map::convertToKey(sf::Vector2f v)

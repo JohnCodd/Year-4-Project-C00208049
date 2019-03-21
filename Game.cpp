@@ -136,24 +136,39 @@ void Game::nextTurn()
 		playerTurn = 1;
 	}
 	m_map.turnUpkeep();
-	std::list<Unit> aiUnits, enemyUnits;
-	for (auto u : m_map.getUnitList())
+	if (playerTurn == 2)
 	{
-		if (u->getOwner() == playerTurn)
+		std::list<Unit> aiUnits, enemyUnits;
+		for (auto u : m_map.getUnitList())
 		{
-			aiUnits.push_back(*u);
+			if (u->getOwner() == playerTurn)
+			{
+				aiUnits.push_back(*u);
+			}
+			else
+			{
+				enemyUnits.push_back(*u);
+			}
 		}
-		else
+		for (auto u : aiUnits)
 		{
-			enemyUnits.push_back(*u);
+			UnitAgent ua = UnitAgent(m_blackboard, u.getLocation(), enemyUnits);
+			ua.execute();
 		}
+		for (auto u : enemyUnits)
+		{
+			for (auto b : m_blackboard.getBattles(u.getLocation()))
+			{
+				sf::Vector2f attackerPos = b.getAttackerPos();
+				sf::Vector2f defenderPos = b.getDefenderPos();
+				auto target = m_map.queryPath(attackerPos, defenderPos);
+				m_map.leftclickMap(sf::Vector2f((attackerPos.x * tileSize) + 4, (attackerPos.y * tileSize) + 4));
+				m_map.leftclickMap(sf::Vector2f(target.getLocation().x * tileSize, target.getLocation().y * tileSize));
+			}
+		}
+		m_blackboard.clearBlackboard();
+		nextTurn();
 	}
-	for (auto u : aiUnits)
-	{
-		UnitAgent ua = UnitAgent(m_blackboard, u.getLocation(), enemyUnits);
-		ua.execute();
-	}
-	m_blackboard.clearBlackboard();
 }
 
 void Game::update(double dt)

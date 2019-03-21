@@ -15,7 +15,7 @@ void UnitAgent::execute()
 {
 	std::list<BattlePreview> data;
 	sf::Vector2f targetPos;
-	for (auto & u : m_enemies)
+	for (auto u : m_enemies)
 	{
 		targetPos = u.getLocation();
 		data = m_blackboard.getBattles(targetPos);
