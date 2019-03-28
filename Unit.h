@@ -25,6 +25,7 @@ public:
 	virtual int getDamageChartValue(UnitTypes u) { return m_damageChart->getDamage(u); }
 	virtual int getDefense() { return this->m_defense; }
 	virtual bool getTurn() { return this->m_turn; }
+	virtual bool isAnimating() { return this->m_animate; }
 	virtual void setTurn(bool b) { this->m_turn = b; }
 	virtual void setPath(std::list<sf::Vector2f> path) { this->m_path = path; this->m_animate = true; }
 	virtual void setDefense(int d)

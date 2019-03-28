@@ -327,12 +327,9 @@ void Map::loadMap(std::string levelFilePath)
 
 void Map::update(float dt)
 {
-	for (auto &t : m_tiles)
+	for (auto &u : m_units)
 	{
-		if (t.second.getUnit())
-		{
-			t.second.getUnit()->animatePath(dt);
-		}
+		u->animatePath(dt);
 	}
 }
 
@@ -492,10 +489,6 @@ void Map::moveSearch(Tile& start, int moves)
 		for (auto &pair : queue.front()->getAdj())
 		{
 			auto & e = pair.second;
-			if (pair.first == sf::Vector2f(4, 11))
-			{
-				std::cout << "Test" << std::endl;
-			}
 			int movesRemaining = queue.front()->getSCost() - start.getUnit()->getMoveChartCost(e->getType());
 			if (movesRemaining >= 0)
 			{
