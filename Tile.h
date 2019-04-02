@@ -32,6 +32,7 @@ public:
 	virtual int getSCost() { return m_searchCost; }
 	virtual Tile* getPrevious()	{ return m_previous; }
 	virtual bool getEnemy() { return m_enemy; }
+	virtual bool getReserved() { return m_reserved; }
 	virtual sf::Vector2f getLocation() { return m_gridLocation; }
 	// Setters
 	virtual void setHighlight(bool b) { m_highlighted = b; }
@@ -40,6 +41,7 @@ public:
 	virtual void setVisited(bool b) { visited = b; }
 	virtual void setSCost(int sc) { m_searchCost = sc; }
 	virtual void setEnemy(bool b) {	m_enemy = b; }
+	virtual void setReserved(bool b) { m_reserved = b; }
 
 	virtual bool operator==(Tile t) { 
 		return m_gridLocation == t.getLocation(); 
@@ -73,6 +75,7 @@ protected:
 	TileTypes m_type = TileTypes::Empty;
 	bool m_highlighted = false;
 	bool m_enemy = false;
+	bool m_reserved = false;
 	sf::Vector2f m_gridLocation;
 	sf::RectangleShape m_sprite, m_highlightSprite, m_highlightRed, m_highlightBlue;
 private:

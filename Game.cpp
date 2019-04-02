@@ -87,7 +87,7 @@ void Game::processEvents()
 			}
 			else if (event.mouseButton.button == sf::Mouse::Right)
 			{
-				m_map.rightclick(event);
+				m_map.rightclick();
 			}
 		}
 		if (event.type == sf::Event::KeyPressed)
@@ -138,7 +138,7 @@ void Game::nextTurn()
 	m_map.turnUpkeep();
 	if (playerTurn == 2)
 	{
-		std::list<Unit> aiUnits, enemyUnits;
+		std::vector<Unit> aiUnits, enemyUnits;
 		for (auto u : m_map.getUnitList())
 		{
 			if (u->getOwner() == playerTurn)
@@ -150,9 +150,10 @@ void Game::nextTurn()
 				enemyUnits.push_back(*u);
 			}
 		}
+		m_blackboard.setEnemies(enemyUnits);
 		for (auto u : aiUnits)
 		{
-			UnitAgent ua = UnitAgent(m_blackboard, u.getLocation(), enemyUnits);
+			UnitAgent ua = UnitAgent(m_blackboard, u.getLocation());
 			ua.execute();
 		}
 		for (auto u : enemyUnits)
@@ -167,6 +168,8 @@ void Game::nextTurn()
 			}
 		}
 		m_blackboard.clearBlackboard();
+		m_map.rightclick();
+		m_map.clearReserved();
 		nextTurn();
 	}
 }

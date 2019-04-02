@@ -21,10 +21,11 @@ public:
 	void update(float dt);
 	void render(sf::RenderWindow & window, float tileSize);
 	void leftclickMap(sf::Vector2f e);
-	void rightclick(sf::Event e);
+	void rightclick();
 	void fButton(sf::Vector2f v, ResourceManager& rm);
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();
+	void clearReserved();
 	void turnUpkeep();
 	bool checkRange(Tile& tile);
 	bool checkTile(sf::Vector2f v);

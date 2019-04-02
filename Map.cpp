@@ -464,7 +464,7 @@ void Map::leftclickMap(sf::Vector2f v)
 	}
 }
 
-void Map::rightclick(sf::Event e)
+void Map::rightclick()
 {
 	selectedUnit = nullptr;
 	clearTiles();
@@ -489,6 +489,10 @@ void Map::moveSearch(Tile& start, int moves)
 		for (auto &pair : queue.front()->getAdj())
 		{
 			auto & e = pair.second;
+			if (e->getReserved())
+			{
+				continue;
+			}
 			int movesRemaining = queue.front()->getSCost() - start.getUnit()->getMoveChartCost(e->getType());
 			if (movesRemaining >= 0)
 			{
@@ -555,6 +559,14 @@ void Map::clearTiles()
 	{
 		m_tiles[a.first].setHighlight(false);
 		m_tiles[a.first].setEnemy(false);
+	}
+}
+
+void Map::clearReserved()
+{
+	for (auto const& a : m_tiles)
+	{
+		m_tiles[a.first].setReserved(false);
 	}
 }
 
@@ -636,7 +648,7 @@ Tile* Map::getClosest(Tile& t)
 	for (auto pair : t.getAdj())
 	{
 		auto a = pair.second;
-		if (a->getHighlighted())
+		if (a->getHighlighted() && !a->getReserved())
 		{
 			if (a->getUnit() == selectedUnit)
 			{
@@ -674,24 +686,34 @@ Tile Map::queryPath(sf::Vector2f startPos, sf::Vector2f endPos)
 {
 	Tile& startTile = getTile(startPos);
 	Tile& targetTile = getTile(endPos);
-	moveSearch(startTile, 999);
-	Tile closest = *getClosest(targetTile);
-	Tile previous = closest;
-	bool destinationFound = false;
-	while (!destinationFound)
+	Tile previous = targetTile;
+	moveSearch(startTile, startTile.getUnit()->getRemainingMoves());
+	if (!targetTile.getEnemy())
 	{
-		if (!(startTile.getUnit()->getMoves() >= 999 - previous.getSCost()))
+		clearTiles();
+		moveSearch(startTile, 999);
+		Tile closest = *getClosest(targetTile);
+		previous = closest;
+		bool destinationFound = false;
+		while (!destinationFound)
 		{
-			previous = *previous.getPrevious();
+			if (!(startTile.getUnit()->getMoves() >= 999 - previous.getSCost()))
+			{
+				previous = *previous.getPrevious();
+			}
+			else
+			{
+				destinationFound = true;
+			}
 		}
-		else
-		{
-			return previous;
-			destinationFound = true;
-		}
+		clearTiles();
+		previous.setReserved(true);
 	}
-	clearTiles();
-	return targetTile;
+	else
+	{
+		previous = targetTile;
+	}
+	return previous;
 }
 
 sf::Vector2f Map::convertToKey(sf::Vector2f v)

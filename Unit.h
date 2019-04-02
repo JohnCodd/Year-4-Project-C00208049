@@ -27,7 +27,15 @@ public:
 	virtual bool getTurn() { return this->m_turn; }
 	virtual bool isAnimating() { return this->m_animate; }
 	virtual void setTurn(bool b) { this->m_turn = b; }
-	virtual void setPath(std::list<sf::Vector2f> path) { this->m_path = path; this->m_animate = true; }
+	virtual void setPath(std::list<sf::Vector2f> path) 
+	{ 
+		if (this->m_animate && m_path.size() > 0)
+		{
+			this->m_displayLocation = this->m_path.front();
+		}
+		this->m_path = path; 
+		this->m_animate = true; 
+	}
 	virtual void setDefense(int d)
 	{
 		if (!dynamic_cast<AirMoveChart*>(m_moveChart))
