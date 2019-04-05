@@ -130,15 +130,21 @@ void Game::processEvents()
 
 void Game::nextTurn()
 {
+	//Clear the map
+	m_map.rightclick();
+	//Move to the next player
 	playerTurn++;
 	if (playerTurn > maxPlayers)
 	{
+		//Loop back to the first player
 		playerTurn = 1;
 	}
 	m_map.turnUpkeep();
+	//Check if AI player
 	if (playerTurn == 2)
 	{
 		std::vector<Unit> aiUnits, enemyUnits;
+		//Sort the units between own units and enemy units
 		for (auto u : m_map.getUnitList())
 		{
 			if (u->getOwner() == playerTurn)
@@ -151,6 +157,7 @@ void Game::nextTurn()
 			}
 		}
 		m_blackboard.setEnemies(enemyUnits);
+		//Execute a unit agent for each AI unit
 		for (auto u : aiUnits)
 		{
 			UnitAgent ua = UnitAgent(m_blackboard, u.getLocation());
@@ -163,10 +170,12 @@ void Game::nextTurn()
 				sf::Vector2f attackerPos = b.getAttackerPos();
 				sf::Vector2f defenderPos = b.getDefenderPos();
 				auto target = m_map.queryPath(attackerPos, defenderPos);
+				//Simulates the AI being a player
 				m_map.leftclickMap(sf::Vector2f((attackerPos.x * tileSize) + 4, (attackerPos.y * tileSize) + 4));
 				m_map.leftclickMap(sf::Vector2f(target.getLocation().x * tileSize, target.getLocation().y * tileSize));
 			}
 		}
+		//Cleanup
 		m_blackboard.clearBlackboard();
 		m_map.rightclick();
 		m_map.clearReserved();
@@ -208,6 +217,7 @@ void Game::render()
 {
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	m_window.setView(backView);
+	//Render the sidebar display
 	sf::RectangleShape sideBar = sf::RectangleShape(sf::Vector2f(windowWidth - sideBarX, windowHeight));
 	sideBar.setPosition(sideBarX, 0);
 	sideBar.setFillColor(sf::Color(79, 48, 15));

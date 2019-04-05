@@ -381,7 +381,6 @@ void Map::leftclickMap(sf::Vector2f v)
 			else if (m_tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(m_tiles[tileLocation]))
 			{
 				Unit* targetUnit = m_tiles[tileLocation].getUnit();
-				Tile* closest = getClosest(m_tiles[tileLocation]);
 				//Attack the targeted unit
 				selectedUnit->attack(*targetUnit);
 				if (targetUnit->getHealth() <= 0)
@@ -405,31 +404,36 @@ void Map::leftclickMap(sf::Vector2f v)
 				}
 				if (selectedUnit)
 				{
-					if (&m_tiles[selectedUnit->getLocation()] != closest)
+					Unit& movingUnit = *selectedUnit;
+					if (m_tiles[tileLocation].getSpaces() > 0)
 					{
-						bool isStart = false;
-						std::list<sf::Vector2f> output;
-						Tile previous = *closest;
-						while (!isStart)
+						Tile* closest = getClosest(m_tiles[tileLocation]);
+						if (&m_tiles[selectedUnit->getLocation()] != closest)
 						{
-							if (!(startTile == previous))
+							bool isStart = false;
+							std::list<sf::Vector2f> output;
+							Tile previous = *closest;
+							while (!isStart)
 							{
-								output.push_back(previous.getLocation());
-								previous = *previous.getPrevious();
+								if (!(startTile == previous))
+								{
+									output.push_back(previous.getLocation());
+									previous = *previous.getPrevious();
+								}
+								else
+								{
+									isStart = true;
+								}
 							}
-							else
-							{
-								isStart = true;
-							}
-						}
-						selectedUnit->setPath(output);
+							selectedUnit->setPath(output);
 
-						closest->setUnit(selectedUnit);
-						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
-						closest->getUnit()->setLocation(closest->getLocation());
+							closest->setUnit(selectedUnit);
+							m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
+							closest->getUnit()->setLocation(closest->getLocation());
+						}
 					}
-					m_tiles[m_targetLocation].getUnit()->moveTaken(m_tiles[m_targetLocation].getSCost());
-					m_tiles[m_targetLocation].getUnit()->setTurn(false);
+					movingUnit.moveTaken(m_tiles[movingUnit.getLocation()].getSCost());
+					movingUnit.setTurn(false);
 				}
 				selectedUnit = nullptr;
 				clearTiles();
@@ -595,6 +599,13 @@ bool Map::checkRange(Tile & tile)
 		{
 			return true;
 		}
+		if (t->getUnit() && tile.getUnit())
+		{
+			if (t->getUnit()->getOwner() != tile.getUnit()->getOwner())
+			{
+				return true;
+			}
+		}
 	}
 	return false;
 }
@@ -682,6 +693,12 @@ Tile* Map::getClosest(Tile& t)
 	return highest;
 }
 
+/// <summary>
+/// Returns the closest possible traversable tile to the destination
+/// </summary>
+/// <param name="startPos"></param>
+/// <param name="endPos"></param>
+/// <returns></returns>
 Tile Map::queryPath(sf::Vector2f startPos, sf::Vector2f endPos)
 {
 	Tile& startTile = getTile(startPos);
@@ -692,22 +709,26 @@ Tile Map::queryPath(sf::Vector2f startPos, sf::Vector2f endPos)
 	{
 		clearTiles();
 		moveSearch(startTile, 999);
-		Tile closest = *getClosest(targetTile);
-		previous = closest;
-		bool destinationFound = false;
-		while (!destinationFound)
+		if (targetTile.getSpaces() > 0)
 		{
-			if (!(startTile.getUnit()->getMoves() >= 999 - previous.getSCost()))
+			Tile closest = *getClosest(targetTile);
+
+			previous = closest;
+			bool destinationFound = false;
+			while (!destinationFound)
 			{
-				previous = *previous.getPrevious();
+				if (!(startTile.getUnit()->getMoves() >= 999 - previous.getSCost()))
+				{
+					previous = *previous.getPrevious();
+				}
+				else
+				{
+					destinationFound = true;
+				}
 			}
-			else
-			{
-				destinationFound = true;
-			}
+			previous.setReserved(true);
 		}
 		clearTiles();
-		previous.setReserved(true);
 	}
 	else
 	{
@@ -718,15 +739,18 @@ Tile Map::queryPath(sf::Vector2f startPos, sf::Vector2f endPos)
 
 sf::Vector2f Map::convertToKey(sf::Vector2f v)
 {
+	//Converts a vector position to a grid position and returns it
 	return sf::Vector2f(floor(v.x / m_tileSize), floor(v.y / m_tileSize));
 }
 
 Tile & Map::getTile(sf::Vector2f v)
 {
+	//Returns a tile object using a given grid position
 	return m_tiles[v];
 }
 
 Unit & Map::getUnit(sf::Vector2f v)
 {
+	//Returns a unit object using a given grid position
 	return *m_tiles[v].getUnit();
 }
