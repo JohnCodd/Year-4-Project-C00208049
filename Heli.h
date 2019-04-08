@@ -13,7 +13,7 @@ public:
 		m_movement = 6;
 		m_remainingMoves = m_movement;
 		m_type = UnitTypes::Heli;
-		m_gridLocation = sf::Vector2f(1, 1);
+		m_displayLocation = sf::Vector2f(1, 1);
 	};
 	Heli(sf::Vector2f location, int p, sf::Texture& tileset, int tSize)
 	{
@@ -23,6 +23,7 @@ public:
 		m_remainingMoves = m_movement;
 		m_type = UnitTypes::Heli;
 		m_gridLocation = location;
+		m_displayLocation = location;
 		m_player = p;
 		m_tileSize = tSize;
 		m_sprite.setTexture(&tileset);
@@ -36,7 +37,7 @@ public:
 			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
 		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
-		m_moveChart = AirMoveChart();
-		m_damageChart = HeliDamageChart();
+		m_moveChart = new AirMoveChart();
+		m_damageChart = new HeliDamageChart();
 	}
 };

@@ -327,12 +327,9 @@ void Map::loadMap(std::string levelFilePath)
 
 void Map::update(float dt)
 {
-	for (auto &t : m_tiles)
+	for (auto &u : m_units)
 	{
-		if (t.second.getUnit())
-		{
-			t.second.getUnit()->animatePath(dt);
-		}
+		u->animatePath(dt);
 	}
 }
 
@@ -346,13 +343,6 @@ void Map::render(sf::RenderWindow & window, float tileSize)
 	{
 		u->render(window);
 	}
-	//for (auto &t :m_tiles)
-	//{
-	//	if (t.second.getUnit())
-	//	{
-	//		t.second.getUnit()->render(window);
-	//	}
-	//}
 	window.draw(m_visualBorder);
 }
 
@@ -391,20 +381,22 @@ void Map::leftclickMap(sf::Vector2f v)
 			else if (m_tiles[tileLocation].getUnit()->getOwner() != selectedUnit->getOwner() && checkRange(m_tiles[tileLocation]))
 			{
 				Unit* targetUnit = m_tiles[tileLocation].getUnit();
-				Tile* closest = getClosest(m_tiles[tileLocation]);
-				//Damage the units
-				targetUnit->damage(selectedUnit->getDamageChartValue(targetUnit->getType()) + 10 - targetTile->getDefense());
+				//Attack the targeted unit
+				selectedUnit->attack(*targetUnit);
 				if (targetUnit->getHealth() <= 0)
 				{
+					//Unit is destroyed
 					m_tiles[targetUnit->getLocation()].setUnit(nullptr);
 					m_units.erase(std::remove(m_units.begin(), m_units.end(), targetUnit), m_units.end());
 					targetUnit = nullptr;
 				}
 				if (targetUnit)
 				{
-					selectedUnit->damage(targetUnit->getDamageChartValue(selectedUnit->getType()) - closest->getDefense());
+					//Attacked unit returns fire if alive
+					targetUnit->retaliate(*selectedUnit);
 					if (selectedUnit->getHealth() <= 0)
 					{
+						//Unit is destroyed
 						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 						m_units.erase(std::remove(m_units.begin(), m_units.end(), selectedUnit), m_units.end());
 						selectedUnit = nullptr;
@@ -412,30 +404,36 @@ void Map::leftclickMap(sf::Vector2f v)
 				}
 				if (selectedUnit)
 				{
-					if (&m_tiles[selectedUnit->getLocation()] != closest)
+					Unit& movingUnit = *selectedUnit;
+					if (m_tiles[tileLocation].getSpaces() > 0)
 					{
-						bool isStart = false;
-						std::list<sf::Vector2f> output;
-						Tile previous = *closest;
-						while (!isStart)
+						Tile* closest = getClosest(m_tiles[tileLocation]);
+						if (&m_tiles[selectedUnit->getLocation()] != closest)
 						{
-							if (!(startTile == previous))
+							bool isStart = false;
+							std::list<sf::Vector2f> output;
+							Tile previous = *closest;
+							while (!isStart)
 							{
-								output.push_back(previous.getLocation());
-								previous = *previous.getPrevious();
+								if (!(startTile == previous))
+								{
+									output.push_back(previous.getLocation());
+									previous = *previous.getPrevious();
+								}
+								else
+								{
+									isStart = true;
+								}
 							}
-							else
-							{
-								isStart = true;
-							}
-						}
-						selectedUnit->setPath(output);
+							selectedUnit->setPath(output);
 
-						closest->setUnit(selectedUnit);
-						m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
+							closest->setUnit(selectedUnit);
+							m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
+							closest->getUnit()->setLocation(closest->getLocation());
+						}
 					}
-					m_tiles[m_targetLocation].getUnit()->moveTaken(m_tiles[m_targetLocation].getSCost());
-					m_tiles[m_targetLocation].getUnit()->setTurn(false);
+					movingUnit.moveTaken(m_tiles[movingUnit.getLocation()].getSCost());
+					movingUnit.setTurn(false);
 				}
 				selectedUnit = nullptr;
 				clearTiles();
@@ -450,6 +448,7 @@ void Map::leftclickMap(sf::Vector2f v)
 			{
 				if (!(startTile == previous))
 				{
+					auto test = previous.getLocation();
 					output.push_back(previous.getLocation());
 					previous = *previous.getPrevious();
 				}
@@ -462,13 +461,14 @@ void Map::leftclickMap(sf::Vector2f v)
 			m_tiles[tileLocation].setUnit(selectedUnit);
 			m_tiles[selectedUnit->getLocation()].setUnit(nullptr);
 			selectedUnit = nullptr;
+			m_tiles[tileLocation].getUnit()->setLocation(tileLocation);
 			m_tiles[tileLocation].getUnit()->moveTaken(m_tiles[tileLocation].getSCost());
 			clearTiles();
 		}
 	}
 }
 
-void Map::rightclick(sf::Event e)
+void Map::rightclick()
 {
 	selectedUnit = nullptr;
 	clearTiles();
@@ -493,9 +493,9 @@ void Map::moveSearch(Tile& start, int moves)
 		for (auto &pair : queue.front()->getAdj())
 		{
 			auto & e = pair.second;
-			if (pair.first == sf::Vector2f(4, 11))
+			if (e->getReserved())
 			{
-				std::cout << "Test" << std::endl;
+				continue;
 			}
 			int movesRemaining = queue.front()->getSCost() - start.getUnit()->getMoveChartCost(e->getType());
 			if (movesRemaining >= 0)
@@ -566,6 +566,14 @@ void Map::clearTiles()
 	}
 }
 
+void Map::clearReserved()
+{
+	for (auto const& a : m_tiles)
+	{
+		m_tiles[a.first].setReserved(false);
+	}
+}
+
 void Map::turnUpkeep()
 {
 	for (auto const& a : m_tiles)
@@ -590,6 +598,13 @@ bool Map::checkRange(Tile & tile)
 		if (t->getHighlighted() && !t->getUnit())
 		{
 			return true;
+		}
+		if (t->getUnit() && tile.getUnit())
+		{
+			if (t->getUnit()->getOwner() != tile.getUnit()->getOwner())
+			{
+				return true;
+			}
 		}
 	}
 	return false;
@@ -644,7 +659,7 @@ Tile* Map::getClosest(Tile& t)
 	for (auto pair : t.getAdj())
 	{
 		auto a = pair.second;
-		if (a->getHighlighted())
+		if (a->getHighlighted() && !a->getReserved())
 		{
 			if (a->getUnit() == selectedUnit)
 			{
@@ -678,17 +693,64 @@ Tile* Map::getClosest(Tile& t)
 	return highest;
 }
 
+/// <summary>
+/// Returns the closest possible traversable tile to the destination
+/// </summary>
+/// <param name="startPos"></param>
+/// <param name="endPos"></param>
+/// <returns></returns>
+Tile Map::queryPath(sf::Vector2f startPos, sf::Vector2f endPos)
+{
+	Tile& startTile = getTile(startPos);
+	Tile& targetTile = getTile(endPos);
+	Tile previous = targetTile;
+	moveSearch(startTile, startTile.getUnit()->getRemainingMoves());
+	if (!targetTile.getEnemy())
+	{
+		clearTiles();
+		moveSearch(startTile, 999);
+		if (targetTile.getSpaces() > 0)
+		{
+			Tile closest = *getClosest(targetTile);
+
+			previous = closest;
+			bool destinationFound = false;
+			while (!destinationFound)
+			{
+				if (!(startTile.getUnit()->getMoves() >= 999 - previous.getSCost()))
+				{
+					previous = *previous.getPrevious();
+				}
+				else
+				{
+					destinationFound = true;
+				}
+			}
+			previous.setReserved(true);
+		}
+		clearTiles();
+	}
+	else
+	{
+		previous = targetTile;
+	}
+	return previous;
+}
+
 sf::Vector2f Map::convertToKey(sf::Vector2f v)
 {
+	//Converts a vector position to a grid position and returns it
 	return sf::Vector2f(floor(v.x / m_tileSize), floor(v.y / m_tileSize));
 }
 
 Tile & Map::getTile(sf::Vector2f v)
 {
+	//Returns a tile object using a given grid position
 	return m_tiles[v];
 }
 
 Unit & Map::getUnit(sf::Vector2f v)
 {
+	//Returns a unit object using a given grid position
 	return *m_tiles[v].getUnit();
 }

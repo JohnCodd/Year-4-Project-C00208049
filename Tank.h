@@ -14,7 +14,7 @@ public:
 		m_movement = 5;
 		m_remainingMoves = m_movement;
 		m_type = UnitTypes::Tank;
-		m_gridLocation = sf::Vector2f(1, 1);
+		m_displayLocation = sf::Vector2f(1, 1);
 	};
 	Tank(sf::Vector2f location, int p, sf::Texture& tileset, int tSize)
 	{
@@ -25,6 +25,7 @@ public:
 		m_remainingMoves = m_movement;
 		m_type = UnitTypes::Tank;
 		m_gridLocation = location;
+		m_displayLocation = location;
 		m_player = p;
 		m_tileSize = tSize;
 		m_sprite.setTexture(&tileset);
@@ -38,8 +39,8 @@ public:
 			m_sprite.setFillColor(sf::Color(255, 100, 100));
 		}
 		m_sprite.setSize(sf::Vector2f(m_tileSize, m_tileSize));
-		m_moveChart = TankMoveChart();
-		m_damageChart = TankDamageChart();
+		m_moveChart = new TankMoveChart();
+		m_damageChart = new TankDamageChart();
 	};
 	~Tank() {};
 };

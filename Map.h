@@ -21,19 +21,22 @@ public:
 	void update(float dt);
 	void render(sf::RenderWindow & window, float tileSize);
 	void leftclickMap(sf::Vector2f e);
-	void rightclick(sf::Event e);
+	void rightclick();
 	void fButton(sf::Vector2f v, ResourceManager& rm);
 	void moveSearch(Tile& start, int moves);
 	void clearTiles();
+	void clearReserved();
 	void turnUpkeep();
 	bool checkRange(Tile& tile);
 	bool checkTile(sf::Vector2f v);
 	Tile* getClosest(Tile& t);
+	Tile queryPath(sf::Vector2f startPos, sf::Vector2f endPos);
 	sf::Vector2f convertToKey(sf::Vector2f v);
 	sf::Vector2f getMapSize() { return sf::Vector2f(m_sizeX, m_sizeY); }
 	sf::FloatRect getBorder() { return m_mapBorder; }
 	Tile& getTile(sf::Vector2f v);
 	Unit& getUnit(sf::Vector2f v);
+	std::list<Unit*> getUnitList() { return m_units; }
 private:
 	int m_sizeX;
 	int m_sizeY;

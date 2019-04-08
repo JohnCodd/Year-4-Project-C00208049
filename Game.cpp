@@ -82,19 +82,12 @@ void Game::processEvents()
 				m_map.leftclickMap(m_window.mapPixelToCoords(sf::Vector2i(mouse)));
 				if (turnButton.getRect().intersects(sf::FloatRect(sf::Vector2f(mouse), sf::Vector2f(2, 2))))
 				{
-						
-					playerTurn++;
-					if (playerTurn > maxPlayers)
-					{
-						playerTurn = 1;
-					}
-					m_map.turnUpkeep();
-						
+					nextTurn();
 				}
 			}
 			else if (event.mouseButton.button == sf::Mouse::Right)
 			{
-				m_map.rightclick(event);
+				m_map.rightclick();
 			}
 		}
 		if (event.type == sf::Event::KeyPressed)
@@ -135,6 +128,61 @@ void Game::processEvents()
 	}
 }
 
+void Game::nextTurn()
+{
+	//Clear the map
+	m_map.rightclick();
+	//Move to the next player
+	playerTurn++;
+	if (playerTurn > maxPlayers)
+	{
+		//Loop back to the first player
+		playerTurn = 1;
+	}
+	m_map.turnUpkeep();
+	//Check if AI player
+	if (playerTurn == 2)
+	{
+		std::vector<Unit> aiUnits, enemyUnits;
+		//Sort the units between own units and enemy units
+		for (auto u : m_map.getUnitList())
+		{
+			if (u->getOwner() == playerTurn)
+			{
+				aiUnits.push_back(*u);
+			}
+			else
+			{
+				enemyUnits.push_back(*u);
+			}
+		}
+		m_blackboard.setEnemies(enemyUnits);
+		//Execute a unit agent for each AI unit
+		for (auto u : aiUnits)
+		{
+			UnitAgent ua = UnitAgent(m_blackboard, u.getLocation());
+			ua.execute();
+		}
+		for (auto u : enemyUnits)
+		{
+			for (auto b : m_blackboard.getBattles(u.getLocation()))
+			{
+				sf::Vector2f attackerPos = b.getAttackerPos();
+				sf::Vector2f defenderPos = b.getDefenderPos();
+				auto target = m_map.queryPath(attackerPos, defenderPos);
+				//Simulates the AI being a player
+				m_map.leftclickMap(sf::Vector2f((attackerPos.x * tileSize) + 4, (attackerPos.y * tileSize) + 4));
+				m_map.leftclickMap(sf::Vector2f(target.getLocation().x * tileSize, target.getLocation().y * tileSize));
+			}
+		}
+		//Cleanup
+		m_blackboard.clearBlackboard();
+		m_map.rightclick();
+		m_map.clearReserved();
+		nextTurn();
+	}
+}
+
 void Game::update(double dt)
 {
 	sf::Vector2f mousePosition = m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window));
@@ -169,6 +217,7 @@ void Game::render()
 {
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	m_window.setView(backView);
+	//Render the sidebar display
 	sf::RectangleShape sideBar = sf::RectangleShape(sf::Vector2f(windowWidth - sideBarX, windowHeight));
 	sideBar.setPosition(sideBarX, 0);
 	sideBar.setFillColor(sf::Color(79, 48, 15));
